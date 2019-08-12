@@ -6,6 +6,7 @@ public class GameCamera : MonoBehaviour
 {
     [Header("Focal Point Variables")]
     [SerializeField] GameObject _target;
+    [SerializeField] GameObject _rotationAnchorObject;
     [SerializeField] Vector3 _translationOffset;
     [SerializeField] Vector3 _followOffset;
 
@@ -29,6 +30,6 @@ public class GameCamera : MonoBehaviour
 
         //Camera look up or down
         _verticalRotationAngle += Input.GetAxis("Mouse Y");
-        transform.RotateAround(_target.transform.position, _target.transform.right, -_verticalRotationAngle);
+        transform.RotateAround(_rotationAnchorObject.transform.position, _rotationAnchorObject.transform.right, -_verticalRotationAngle);
     }
 }
