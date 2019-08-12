@@ -335,6 +335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1964582531}
   translationOffset: {x: 0, y: 1.1, z: 0}
+  followOffset: {x: 0, y: -1.5, z: 2.5}
 --- !u!1001 &1637282827
 PrefabInstance:
   m_ObjectHideFlags: 0
