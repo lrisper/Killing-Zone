@@ -9,6 +9,9 @@ public class GameCamera : MonoBehaviour
     [SerializeField] GameObject _rotationAnchorObject;
     [SerializeField] Vector3 _translationOffset;
     [SerializeField] Vector3 _followOffset;
+    [SerializeField] float _maxViewingAngle;
+    [SerializeField] float _minViewingAngle;
+    [SerializeField] float _rotationSensitivity;
 
     float _verticalRotationAngle;
 
@@ -30,6 +33,10 @@ public class GameCamera : MonoBehaviour
 
         //Camera look up or down
         _verticalRotationAngle += Input.GetAxis("Mouse Y");
+
+        // Camera lock on up and down view
+        _verticalRotationAngle = Mathf.Clamp(_verticalRotationAngle + Input.GetAxis("Mouse Y") * _rotationSensitivity, _minViewingAngle, _maxViewingAngle);
+
         transform.RotateAround(_rotationAnchorObject.transform.position, _rotationAnchorObject.transform.right, -_verticalRotationAngle);
     }
 }

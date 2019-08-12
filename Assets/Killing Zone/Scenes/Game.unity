@@ -337,6 +337,9 @@ MonoBehaviour:
   _rotationAnchorObject: {fileID: 1987873556}
   _translationOffset: {x: 0, y: 1, z: 0}
   _followOffset: {x: 0, y: -1.5, z: 2.5}
+  _maxViewingAngle: 60
+  _minViewingAngle: -30
+  _rotationSensitivity: 2
 --- !u!1 &959081348
 GameObject:
   m_ObjectHideFlags: 0
