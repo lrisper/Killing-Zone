@@ -448,6 +448,7 @@ MonoBehaviour:
   _focalPoint: {fileID: 959081348}
   _focalDistance: 0.65
   _changefocalSideKey: 113
+  _focalSmoothness: 7.5
 --- !u!4 &1964582538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce,
