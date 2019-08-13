@@ -3094,7 +3094,7 @@ MonoBehaviour:
   _target: {fileID: 959081348}
   _rotationAnchorObject: {fileID: 1987873556}
   _translationOffset: {x: 0, y: 1, z: 0}
-  _followOffset: {x: 0, y: -1.5, z: 2.5}
+  _followOffset: {x: 0, y: -1.25, z: 2.4}
   _maxViewingAngle: 60
   _minViewingAngle: -30
   _rotationSensitivity: 2
@@ -8877,6 +8877,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1390169727}
   - component: {fileID: 1390169728}
+  - component: {fileID: 1390169729}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -8914,6 +8915,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _opensInWards: 1
   _openingSpeed: 5
+--- !u!65 &1390169729
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390169726}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 2, z: 1}
+  m_Center: {x: 0, y: 1, z: -0.5}
 --- !u!1001 &1400605436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11993,7 +12007,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _focalPoint: {fileID: 959081348}
-  _focalDistance: 0.65
+  _focalDistance: 0.4
   _changefocalSideKey: 113
   _focalSmoothness: 7.5
   _gameCamera: {fileID: 534669906}

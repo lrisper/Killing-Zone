@@ -45,7 +45,10 @@ public class Player : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(_gameCamera.transform.position, _gameCamera.transform.forward, out hit, _interactionDistance))
             {
-
+                if (hit.transform.GetComponent<Door>())
+                {
+                    hit.transform.GetComponent<Door>().Interact();
+                }
             }
         }
 
