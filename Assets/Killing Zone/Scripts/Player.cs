@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public enum playerTool
+    {
+        pickaxe,
+        None
+    }
 
+    [Header("Focal Point Variables")]
     [SerializeField] GameObject _focalPoint;
     [SerializeField] float _focalDistance;
     [SerializeField] KeyCode _changefocalSideKey;
@@ -18,6 +24,10 @@ public class Player : MonoBehaviour
     [Header("Interface")]
     [SerializeField] HUDController _hud;
 
+    [Header("Game Play")]
+    [SerializeField] KeyCode _toolSwitchKey;
+    [SerializeField] playerTool _tool;
+
     bool _isFocalPointOnLeft = true;
     int _resources = 0;
 
@@ -26,6 +36,7 @@ public class Player : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         _hud.Resources = _resources;
+        _hud.ToolIndex = 0;
     }
 
     // Update is called once per frame
@@ -55,6 +66,10 @@ public class Player : MonoBehaviour
                     hit.transform.GetComponent<Door>().Interact();
                 }
             }
+        }
+        if (Input.GetKeyDown(_toolSwitchKey))
+        {
+            //
         }
 
     }
