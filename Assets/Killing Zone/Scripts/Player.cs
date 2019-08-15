@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public enum playerTool
     {
         pickaxe,
+        Grenade,
         None
     }
 
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
     [Header("Game Play")]
     [SerializeField] KeyCode _toolSwitchKey;
     [SerializeField] playerTool _tool;
+
 
     bool _isFocalPointOnLeft = true;
     int _resources = 0;

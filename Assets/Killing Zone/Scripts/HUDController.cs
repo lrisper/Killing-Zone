@@ -10,7 +10,10 @@ public class HUDController : MonoBehaviour
 
     [Header("Tool Selctor")]
     [SerializeField] GameObject _toolFocus;
-    [SerializeField] GameObject[] _tools;
+    [SerializeField] GameObject _toolContainer;
+    [SerializeField] float _focusSmooveness;
+
+    float targetFocusX;
 
     public int Resources
     {
@@ -21,16 +24,22 @@ public class HUDController : MonoBehaviour
     {
         set
         {
-            _toolFocus.transform.position = new Vector3(
-           _tools[(int)value].transform.position.x,
-           _toolFocus.transform.position.y
-           );
+            targetFocusX = _toolContainer.transform.GetChild((int)value).transform.position.x;
+
         }
     }
 
-    public void Start()
+    private void Start()
     {
+        targetFocusX = _toolContainer.transform.GetChild(0).transform.position.x;
+        _toolFocus.transform.position = new Vector3(targetFocusX, _toolFocus.transform.position.y);
+    }
 
+    private void Update()
+    {
+        _toolFocus.transform.position = new Vector3(
+            Mathf.Lerp(_toolFocus.transform.position.x, targetFocusX, Time.deltaTime * _focusSmooveness),
+             _toolFocus.transform.position.y);
     }
 
 }
