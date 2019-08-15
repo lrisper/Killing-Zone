@@ -17,12 +17,12 @@ public class HUDController : MonoBehaviour
         set { _resourcesText.text = "Resources: " + value; }
     }
 
-    public int ToolIndex
+    public Player.playerTool Tool
     {
         set
         {
             _toolFocus.transform.position = new Vector3(
-           _tools[value].transform.position.x,
+           _tools[(int)value].transform.position.x,
            _toolFocus.transform.position.y
            );
         }

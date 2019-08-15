@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         _hud.Resources = _resources;
-        _hud.ToolIndex = 0;
+        _hud.Tool = 0;
     }
 
     // Update is called once per frame
@@ -69,7 +69,16 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(_toolSwitchKey))
         {
-            //
+            int currentToolIndex = (int)_tool;
+            currentToolIndex++;
+
+            if (currentToolIndex == System.Enum.GetNames(typeof(playerTool)).Length)
+            {
+                currentToolIndex = 0;
+            }
+
+            _tool = (playerTool)currentToolIndex;
+            _hud.Tool = _tool;
         }
 
     }
