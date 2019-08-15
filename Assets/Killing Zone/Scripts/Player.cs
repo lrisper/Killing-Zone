@@ -15,12 +15,17 @@ public class Player : MonoBehaviour
     [SerializeField] KeyCode _interactionKey;
     [SerializeField] float _interactionDistance;
 
+    [Header("Interface")]
+    [SerializeField] HUDController _hud;
+
     bool _isFocalPointOnLeft = true;
+    int _resources = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        _hud.Resources = _resources;
     }
 
     // Update is called once per frame
