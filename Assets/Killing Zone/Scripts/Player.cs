@@ -33,12 +33,14 @@ public class Player : MonoBehaviour
     [SerializeField] float _resourceCollectionCooldown;
 
     [Header("Obstacles")]
+    [SerializeField] GameObject _obstaclePlacementContainer;
     [SerializeField] GameObject[] _obstaclePrefabs;
 
 
     bool _isFocalPointOnLeft = true;
     int _resources;
-    float _resourceCollectionCooldownTimer;
+    float _resourceCollectionCooldownTimer = 0;
+    GameObject _currentObstacle;
 
     // Start is called before the first frame update
     void Start()
@@ -117,7 +119,6 @@ public class Player : MonoBehaviour
 
     private void SwitchTool()
     {
-        PlayerTool previousTool = _tool;
 
         // cycle between tools
         int currentToolIndex = (int)_tool;
@@ -132,28 +133,41 @@ public class Player : MonoBehaviour
         _tool = (PlayerTool)currentToolIndex;
         _hud.Tool = _tool;
 
+        int obstacleToAddIndex = -1;
         // check for obstacle placement logic
         if (_tool == PlayerTool.ObstacleVertical)
         {
+            obstacleToAddIndex = 0;
             // show obstacle in placement mode
             Debug.Log("Choose OV");
 
         }
         else if (_tool == PlayerTool.ObstacleRamp)
         {
+            obstacleToAddIndex = 1;
             //
             Debug.Log("Choose OR");
         }
         else if (_tool == PlayerTool.ObstacleHorizontal)
         {
+            obstacleToAddIndex = 2;
             //
             Debug.Log("Choose OH");
         }
-        else if (previousTool == PlayerTool.ObstacleHorizontal)
-        {
-            // remove any obstacle in placement mode
-            Debug.Log("Player Quit choosing Obstacle");
 
+        if (_currentObstacle != null)
+        {
+            Destroy(_currentObstacle);
         }
+
+        if (obstacleToAddIndex >= 0)
+        {
+            _currentObstacle = Instantiate(_obstaclePrefabs[obstacleToAddIndex]);
+            _currentObstacle.transform.SetParent(_obstaclePlacementContainer.transform);
+
+            _currentObstacle.transform.localPosition = Vector3.zero;
+            _currentObstacle.transform.localRotation = Quaternion.identity;
+        }
+
     }
 }
