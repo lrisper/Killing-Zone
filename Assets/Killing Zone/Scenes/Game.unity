@@ -16764,6 +16764,7 @@ MonoBehaviour:
   _hud: {fileID: 1753472497}
   _toolSwitchKey: 9
   _tool: 0
+  _resourceCollectionCooldown: 1
 --- !u!4 &1964582538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce,
