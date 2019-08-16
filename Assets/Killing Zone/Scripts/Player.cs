@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] KeyCode _changefocalSideKey;
     [SerializeField] float _focalSmoothness = 7.5f;
 
+
     [Header("Interaction")]
     [SerializeField] GameCamera _gameCamera;
     [SerializeField] KeyCode _interactionKey;
@@ -69,8 +70,11 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        // tool switch logic
         if (Input.GetKeyDown(_toolSwitchKey))
         {
+            // cycle between tools
             int currentToolIndex = (int)_tool;
             currentToolIndex++;
 
@@ -79,9 +83,27 @@ public class Player : MonoBehaviour
                 currentToolIndex = 0;
             }
 
+            // get new tool
             _tool = (playerTool)currentToolIndex;
             _hud.Tool = _tool;
         }
 
+        // user logic
+        if (Input.GetAxis("Fire1") > 0)
+        {
+            if (_tool == playerTool.pickaxe)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(_gameCamera.transform.position, _gameCamera.transform.forward, out hit, _interactionDistance))
+                {
+                    if (hit.transform.GetComponent<ResourceObject>() != null)
+                    {
+                        ResourceObject resourceObject = hit.transform.GetComponent<ResourceObject>();
+                        Debug.Log("hit the object");
+                        resourceObject.Interact();
+                    }
+                }
+            }
+        }
     }
 }
