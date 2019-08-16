@@ -17424,7 +17424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.5
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 3}
       propertyPath: m_LocalRotation.x
@@ -20655,6 +20655,10 @@ MonoBehaviour:
   _toolSwitchKey: 9
   _tool: 0
   _resourceCollectionCooldown: 1
+  _obstaclePrefabs:
+  - {fileID: 3456327334537288682, guid: 5609d2d42740d43bda135de98d79302f, type: 3}
+  - {fileID: 1608130089658091521, guid: a8d31e193f5c94dc1bcb450af830f94e, type: 3}
+  - {fileID: 3289848610162924840, guid: fa76db7bd28f44d16bcb8c6e9367a587, type: 3}
 --- !u!4 &1964582538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce,
@@ -21192,8 +21196,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2029443920}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 537.0677, y: -208.9832, z: -3138.515}
+  m_LocalRotation: {x: 0.0130709205, y: 0.8384064, z: 0.54451716, w: -0.020125605}
+  m_LocalPosition: {x: 2.7757533, y: -276.27426, z: -43.775005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2088303022}

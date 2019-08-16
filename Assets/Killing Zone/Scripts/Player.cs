@@ -19,7 +19,6 @@ public class Player : MonoBehaviour
     [SerializeField] KeyCode _changefocalSideKey;
     [SerializeField] float _focalSmoothness = 7.5f;
 
-
     [Header("Interaction")]
     [SerializeField] GameCamera _gameCamera;
     [SerializeField] KeyCode _interactionKey;
@@ -32,6 +31,9 @@ public class Player : MonoBehaviour
     [SerializeField] KeyCode _toolSwitchKey;
     [SerializeField] PlayerTool _tool;
     [SerializeField] float _resourceCollectionCooldown;
+
+    [Header("Obstacles")]
+    [SerializeField] GameObject[] _obstaclePrefabs;
 
 
     bool _isFocalPointOnLeft = true;
