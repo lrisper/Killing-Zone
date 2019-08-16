@@ -10,7 +10,7 @@ public class Obstacle : MonoBehaviour
     Collider _obstacleCollider;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _obstacleCollider = GetComponentInChildren<Collider>();
 
@@ -27,6 +27,7 @@ public class Obstacle : MonoBehaviour
 
     public void Place()
     {
-
+        // enable collider
+        _obstacleCollider.enabled = true;
     }
 }

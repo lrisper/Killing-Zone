@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
 
     [Header("Obstacles")]
     [SerializeField] GameObject _obstaclePlacementContainer;
+    [SerializeField] GameObject _obstacleContainer;
     [SerializeField] GameObject[] _obstaclePrefabs;
 
 
@@ -41,6 +43,7 @@ public class Player : MonoBehaviour
     int _resources;
     float _resourceCollectionCooldownTimer = 0;
     GameObject _currentObstacle;
+    bool _obstaclePlacementLock;
 
     // Start is called before the first frame update
     void Start()
@@ -99,14 +102,37 @@ public class Player : MonoBehaviour
                 );
         }
 
-        // user logic
-        if (Input.GetAxis("Fire1") > 0)
+        // Tool usage logic(continuous)
+        if (Input.GetAxis("Fire1") > 0.1f)
         {
-            UseTool();
+            UseToolContinuous();
+        }
+
+        // Tool usage logic(Trigger)
+        if (Input.GetAxis("Fire1") > 0.1f && !_obstaclePlacementLock)
+        {
+            _obstaclePlacementLock = true;
+            UseToolTrigger();
+        }
+        if (Input.GetAxis("Fire1") < 0.1f)
+        {
+            _obstaclePlacementLock = false;
         }
     }
 
-    private void UseTool()
+    private void UseToolTrigger()
+    {
+        if (_currentObstacle != null)
+        {
+            GameObject newObstacle = Instantiate(_currentObstacle);
+            newObstacle.transform.SetParent(_obstacleContainer.transform);
+            newObstacle.transform.position = _currentObstacle.transform.position;
+            newObstacle.transform.rotation = _currentObstacle.transform.rotation;
+            newObstacle.GetComponent<Obstacle>().Place();
+        }
+    }
+
+    private void UseToolContinuous()
     {
         if (_tool == PlayerTool.pickaxe)
         {
