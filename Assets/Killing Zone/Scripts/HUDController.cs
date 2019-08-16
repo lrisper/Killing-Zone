@@ -20,7 +20,7 @@ public class HUDController : MonoBehaviour
         set { _resourcesText.text = "Resources: " + value; }
     }
 
-    public Player.playerTool Tool
+    public Player.PlayerTool Tool
     {
         set
         {

@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public enum playerTool
+    public enum PlayerTool
     {
         pickaxe,
-        Grenade,
+        ObstacleVertical,
+        ObstacleRamp,
+        ObstacleHorizontal,
         None
     }
 
@@ -28,13 +30,13 @@ public class Player : MonoBehaviour
 
     [Header("Game Play")]
     [SerializeField] KeyCode _toolSwitchKey;
-    [SerializeField] playerTool _tool;
+    [SerializeField] PlayerTool _tool;
     [SerializeField] float _resourceCollectionCooldown;
 
 
     bool _isFocalPointOnLeft = true;
-    int _resources = 0;
-    float _resourceConllectionCooldownTimer;
+    int _resources;
+    float _resourceCollectionCooldownTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -79,40 +81,77 @@ public class Player : MonoBehaviour
         // tool switch logic
         if (Input.GetKeyDown(_toolSwitchKey))
         {
-            // cycle between tools
-            int currentToolIndex = (int)_tool;
-            currentToolIndex++;
+            SwitchTool();
 
-            if (currentToolIndex == System.Enum.GetNames(typeof(playerTool)).Length)
-            {
-                currentToolIndex = 0;
-            }
-
-            // get new tool
-            _tool = (playerTool)currentToolIndex;
-            _hud.Tool = _tool;
         }
 
         // user logic
         if (Input.GetAxis("Fire1") > 0)
         {
-            if (_tool == playerTool.pickaxe)
-            {
-                RaycastHit hit;
-                if (Physics.Raycast(_gameCamera.transform.position, _gameCamera.transform.forward, out hit, _interactionDistance))
-                {
-                    if (_resourceCollectionCooldown <= 0 && hit.transform.GetComponent<ResourceObject>() != null)
-                    {
-                        _resourceConllectionCooldownTimer = _resourceCollectionCooldown;
+            UseTool();
+        }
+    }
 
-                        ResourceObject resourceObject = hit.transform.GetComponent<ResourceObject>();
-                        Debug.Log("hit the object");
-                        int collectedResources = resourceObject.Collect();
-                        _resources += collectedResources;
-                        _hud.Resources = _resources;
-                    }
+    private void UseTool()
+    {
+        if (_tool == PlayerTool.pickaxe)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(_gameCamera.transform.position, _gameCamera.transform.forward, out hit, _interactionDistance))
+            {
+                if (_resourceCollectionCooldown <= 0 && hit.transform.GetComponent<ResourceObject>() != null)
+                {
+                    _resourceCollectionCooldownTimer = _resourceCollectionCooldown;
+
+                    ResourceObject resourceObject = hit.transform.GetComponent<ResourceObject>();
+                    Debug.Log("hit the object");
+                    int collectedResources = resourceObject.Collect();
+                    _resources += collectedResources;
+                    _hud.Resources = _resources;
                 }
             }
+        }
+    }
+
+    private void SwitchTool()
+    {
+        PlayerTool previousTool = _tool;
+
+        // cycle between tools
+        int currentToolIndex = (int)_tool;
+        currentToolIndex++;
+
+        if (currentToolIndex == System.Enum.GetNames(typeof(PlayerTool)).Length)
+        {
+            currentToolIndex = 0;
+        }
+
+        // get new tool
+        _tool = (PlayerTool)currentToolIndex;
+        _hud.Tool = _tool;
+
+        // check for obstacle placement logic
+        if (_tool == PlayerTool.ObstacleVertical)
+        {
+            // show obstacle in placement mode
+            Debug.Log("Choose OV");
+
+        }
+        else if (_tool == PlayerTool.ObstacleRamp)
+        {
+            //
+            Debug.Log("Choose OR");
+        }
+        else if (_tool == PlayerTool.ObstacleHorizontal)
+        {
+            //
+            Debug.Log("Choose OH");
+        }
+        else if (previousTool == PlayerTool.ObstacleHorizontal)
+        {
+            // remove any obstacle in placement mode
+            Debug.Log("Player Quit choosing Obstacle");
+
         }
     }
 }
