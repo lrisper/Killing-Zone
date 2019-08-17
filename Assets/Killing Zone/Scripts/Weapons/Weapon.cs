@@ -8,11 +8,11 @@ public class Weapon
     int _clipAmmunition;
     int _totalAmmunition;
 
-    int _clipSize;
-    int _maxAmmunition;
-    float _reloadTime;
-    float _cooldownTime;
-    bool _isAutomatic;
+    protected int _clipSize;
+    protected int _maxAmmunition;
+    protected float _reloadTime;
+    protected float _cooldownTime;
+    protected bool _isAutomatic;
 
 
 
