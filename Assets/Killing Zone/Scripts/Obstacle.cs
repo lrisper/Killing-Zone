@@ -7,6 +7,14 @@ public class Obstacle : MonoBehaviour
     [SerializeField] int _health;
     [SerializeField] int _cost;
 
+    public int Cost
+    {
+        get
+        {
+            return _cost;
+        }
+    }
+
     Collider _obstacleCollider;
 
     // Start is called before the first frame update

@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     [Header("Game Play")]
     [SerializeField] KeyCode _toolSwitchKey;
     [SerializeField] PlayerTool _tool;
+    [SerializeField] int _initialResourceCount;
     [SerializeField] float _resourceCollectionCooldown;
 
     [Header("Obstacles")]
@@ -49,6 +50,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        _resources = _initialResourceCount;
         _hud.Resources = _resources;
         _hud.Tool = 0;
     }
@@ -122,8 +124,14 @@ public class Player : MonoBehaviour
 
     private void UseToolTrigger()
     {
-        if (_currentObstacle != null)
+        if (_currentObstacle != null && _resources >= _currentObstacle.GetComponent<Obstacle>().Cost)
         {
+            int cost = _currentObstacle.GetComponent<Obstacle>().Cost;
+            _resources -= cost;
+
+            _hud.Resources = _resources;
+            _hud.UpdateResourcesRequirement(cost, _resources);
+
             GameObject newObstacle = Instantiate(_currentObstacle);
             newObstacle.transform.SetParent(_obstacleContainer.transform);
             newObstacle.transform.position = _currentObstacle.transform.position;
@@ -203,6 +211,8 @@ public class Player : MonoBehaviour
 
             _currentObstacle.transform.localPosition = Vector3.zero;
             _currentObstacle.transform.localRotation = Quaternion.identity;
+
+            _hud.UpdateResourcesRequirement(_currentObstacle.GetComponent<Obstacle>().Cost, _resources);
         }
 
     }
