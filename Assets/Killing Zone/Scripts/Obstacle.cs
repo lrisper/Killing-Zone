@@ -6,6 +6,7 @@ public class Obstacle : MonoBehaviour
 {
     [SerializeField] int _health;
     [SerializeField] int _cost;
+    Renderer _obstacleRender;
 
     public int Cost
     {
@@ -25,6 +26,10 @@ public class Obstacle : MonoBehaviour
         // start with obstacle collider disabled
         _obstacleCollider.enabled = false;
 
+        //working with transparancy
+        _obstacleRender = GetComponentInChildren<Renderer>();
+        _obstacleRender.material.color = new Color(1f, 1f, 1f, 0.5f);
+
     }
 
     // Update is called once per frame
@@ -37,5 +42,9 @@ public class Obstacle : MonoBehaviour
     {
         // enable collider
         _obstacleCollider.enabled = true;
+
+        // make obstacle opaque
+        _obstacleRender.material.color = Color.white;
+
     }
 }
