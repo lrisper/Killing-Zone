@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     GameObject _currentObstacle;
     bool _obstaclePlacementLock;
 
+    List<Weapon> _weapons;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,7 +55,7 @@ public class Player : MonoBehaviour
         _hud.Resources = _resources;
         _hud.Tool = 0;
 
-
+        _weapons = new List<Weapon>();
     }
 
     // Update is called once per frame
