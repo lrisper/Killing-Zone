@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,5 +34,10 @@ public abstract class Weapon
 
         _clipAmmunition += ammunitiontoLoad;
         _totalAmmunition -= ammunitiontoLoad;
+    }
+
+    public void AddAmmunition(int amount)
+    {
+        TotalAmmunition = System.Math.Min(_totalAmmunition + amount, _maxAmmunition);
     }
 }

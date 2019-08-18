@@ -236,9 +236,31 @@ public class Player : MonoBehaviour
     {
         if (type == ItemBox.ItemType.Pistol)
         {
-            Pistol pistol = new Pistol();
-            pistol.TotalAmmunition = amount;
-            pistol.LoadClip();
+            // create a weapon reference
+            Weapon weapon = null;
+
+            // check if we already have weapon
+            for (int i = 0; i < _weapons.Count; i++)
+            {
+                if (_weapons[i] is Pistol)
+                {
+                    weapon = _weapons[i];
+                }
+            }
+
+            // create weapon if we don't have one and add to list
+            if (weapon == null)
+            {
+                weapon = new Pistol();
+                _weapons.Add(weapon);
+            }
+
+
+            weapon.AddAmmunition(amount);
+            weapon.LoadClip();
+
+            Debug.Log(weapon.ClipAmmunition);
+            Debug.Log(weapon.TotalAmmunition);
         }
     }
 }
