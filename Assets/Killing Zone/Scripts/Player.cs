@@ -45,8 +45,11 @@ public class Player : MonoBehaviour
     float _resourceCollectionCooldownTimer = 0;
     GameObject _currentObstacle;
     bool _obstaclePlacementLock;
+    bool _isUsingTools = true;
 
     List<Weapon> _weapons;
+    Weapon _weapon;
+
 
     // Start is called before the first frame update
     void Start()
@@ -92,6 +95,29 @@ public class Player : MonoBehaviour
                     hit.transform.GetComponent<Door>().Interact();
                 }
             }
+        }
+
+        // select weapons
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SwitchWeapon(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SwitchWeapon(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SwitchWeapon(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SwitchWeapon(3);
+
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SwitchWeapon(4);
         }
 
         // tool switch logic
@@ -168,8 +194,33 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void SwitchWeapon(int index)
+    {
+        if (index < _weapons.Count)
+        {
+            _isUsingTools = false;
+
+            _weapon = _weapons[index];
+            _hud.UpdateWeapon(_weapon);
+
+            _tool = PlayerTool.None;
+            _hud.Tool = _tool;
+
+            if (_currentObstacle != null)
+            {
+                Destroy(_currentObstacle);
+            }
+        }
+
+
+    }
+
     private void SwitchTool()
     {
+        _isUsingTools = true;
+
+        _weapon = null;
+        _hud.UpdateWeapon(_weapon);
 
         // cycle between tools
         int currentToolIndex = (int)_tool;
@@ -241,30 +292,35 @@ public class Player : MonoBehaviour
         if (type == ItemBox.ItemType.Pistol)
         {
             // create a weapon reference
-            Weapon weapon = null;
+            Weapon currentWeapon = null;
 
             // check if we already have weapon
             for (int i = 0; i < _weapons.Count; i++)
             {
                 if (_weapons[i] is Pistol)
                 {
-                    weapon = _weapons[i];
+                    currentWeapon = _weapons[i];
                 }
             }
 
             // create weapon if we don't have one and add to list
-            if (weapon == null)
+            if (currentWeapon == null)
             {
-                weapon = new Pistol();
-                _weapons.Add(weapon);
+                currentWeapon = new Pistol();
+                _weapons.Add(currentWeapon);
             }
 
 
-            weapon.AddAmmunition(amount);
-            weapon.LoadClip();
+            currentWeapon.AddAmmunition(amount);
+            currentWeapon.LoadClip();
 
-            Debug.Log(weapon.ClipAmmunition);
-            Debug.Log(weapon.TotalAmmunition);
+            if (currentWeapon == _weapon)
+            {
+                _hud.UpdateWeapon(_weapon);
+            }
+
+            Debug.Log(currentWeapon.ClipAmmunition);
+            Debug.Log(currentWeapon.TotalAmmunition);
         }
     }
 }

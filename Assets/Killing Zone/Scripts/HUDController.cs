@@ -27,7 +27,16 @@ public class HUDController : MonoBehaviour
     {
         set
         {
-            targetFocusX = _toolContainer.transform.GetChild((int)value).transform.position.x;
+            if (value != Player.PlayerTool.None)
+            {
+                _toolFocus.SetActive(true);
+                targetFocusX = _toolContainer.transform.GetChild((int)value).transform.position.x;
+            }
+            else
+            {
+                _toolFocus.SetActive(false);
+            }
+
             if (value != Player.PlayerTool.ObstacleHorizontal &&
                 value != Player.PlayerTool.ObstacleRamp &&
                 value != Player.PlayerTool.ObstacleVertical)
