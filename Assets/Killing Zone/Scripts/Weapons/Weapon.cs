@@ -19,7 +19,7 @@ public abstract class Weapon
     protected string _weaponName = "";
 
     // private fields
-    float _reloadTimer;
+    float _reloadTimer = -1f;
     float _coolDownTimer;
     bool _pressedTrigger;
 
@@ -52,6 +52,7 @@ public abstract class Weapon
     {
         bool hasShot = false;
 
+        // cooldown logic
         _coolDownTimer -= deltaTime;
         if (_coolDownTimer <= 0)
         {
@@ -65,18 +66,48 @@ public abstract class Weapon
                 canShoot = true;
             }
 
-            if (canShoot)
+            if (canShoot && _reloadTimer <= 0)
             {
                 _coolDownTimer = _cooldownDuration;
+
+                // only shoot if there are any available bullets
                 if (_clipAmmunition > 0)
                 {
                     _clipAmmunition--;
                     hasShot = true;
                 }
+
+                if (_clipAmmunition == 0)
+                {
+                    // automatically reload weapon 
+                    Reload();
+                }
             }
 
             _pressedTrigger = isPressingTrigger;
         }
+
+        // reload logic
+        if (_reloadTimer > 0)
+        {
+            _reloadTimer -= deltaTime;
+            if (_reloadTimer <= 0)
+            {
+                LoadClip();
+            }
+        }
+
         return hasShot;
+    }
+
+    public void Reload()
+    {
+        // only reload weapon if weapon is not currently reloading
+        // and the clip is not full
+        if (_reloadTimer <= 0 && _clipAmmunition < _clipSize)
+        {
+            _reloadTimer = _reloadDuration;
+        }
+
     }
 }

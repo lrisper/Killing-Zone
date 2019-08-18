@@ -331,6 +331,12 @@ public class Player : MonoBehaviour
     {
         if (_weapon != null)
         {
+            // press R key to reload
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                _weapon.Reload();
+            }
+
             float timeElapsed = Time.deltaTime;
             bool isPressingTrigger = Input.GetAxis("Fire1") > 0.1f;
 
