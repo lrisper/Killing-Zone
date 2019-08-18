@@ -33,6 +33,7 @@ public abstract class Weapon
     public float CooldownDuration { get { return _cooldownDuration; } }
     public bool IsAutomatic { get { return _isAutomatic; } }
     public string WeaponName { get { return _weaponName; } }
+    public float ReloadTimer { get { return _reloadTimer; } }
 
     public void LoadClip()
     {
