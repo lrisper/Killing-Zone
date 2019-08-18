@@ -149,10 +149,13 @@ public class Player : MonoBehaviour
             _obstaclePlacementLock = true;
             UseToolTrigger();
         }
+
         if (Input.GetAxis("Fire1") < 0.1f)
         {
             _obstaclePlacementLock = false;
         }
+
+        UpdateWeapon();
     }
 
     private void UseToolTrigger()
@@ -323,4 +326,16 @@ public class Player : MonoBehaviour
             Debug.Log(currentWeapon.TotalAmmunition);
         }
     }
+
+    private void UpdateWeapon()
+    {
+        if (_weapon != null)
+        {
+            float timeElapsed = Time.deltaTime;
+            bool isPressingTrigger = Input.GetAxis("Fire1") > 0.1f;
+            _weapon.Update(timeElapsed, isPressingTrigger);
+        }
+
+    }
 }
+

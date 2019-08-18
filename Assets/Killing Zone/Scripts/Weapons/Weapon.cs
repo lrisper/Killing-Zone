@@ -42,4 +42,9 @@ public abstract class Weapon
     {
         TotalAmmunition = System.Math.Min(_totalAmmunition + amount, _maxAmmunition);
     }
+
+    public void Update(float timeElapsed, bool isPressingTrigger)
+    {
+        throw new NotImplementedException();
+    }
 }
