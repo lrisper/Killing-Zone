@@ -15,6 +15,7 @@ public abstract class Weapon
     protected float _reloadTime;
     protected float _cooldownTime;
     protected bool _isAutomatic;
+    protected string _weaponName = "";
 
 
 
@@ -26,6 +27,7 @@ public abstract class Weapon
     public float ReloadTime { get { return _reloadTime; } }
     public float CooldownTime { get { return _cooldownTime; } }
     public bool IsAutomatic { get { return _isAutomatic; } }
+    public string WeaponName { get { return _weaponName; } }
 
     public void LoadClip()
     {

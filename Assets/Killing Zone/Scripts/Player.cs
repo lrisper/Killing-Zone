@@ -47,15 +47,19 @@ public class Player : MonoBehaviour
     bool _obstaclePlacementLock;
 
     List<Weapon> _weapons;
+
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         _resources = _initialResourceCount;
+
         _hud.Resources = _resources;
         _hud.Tool = 0;
+        _hud.UpdateWeapon(null);
 
         _weapons = new List<Weapon>();
+
     }
 
     // Update is called once per frame

@@ -10,6 +10,7 @@ public class Pistol : Weapon
         _reloadTime = 2f;
         _cooldownTime = .25f;
         _isAutomatic = false;
+        _weaponName = "Pistol";
 
     }
 }
