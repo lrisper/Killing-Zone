@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class ItemBox : MonoBehaviour
 {
+    public enum ItemType
+    {
+        Pistol
+    }
+
     [Header("Values")]
-    [SerializeField] string _itemName;
+    [SerializeField] ItemType _itemType;
     [SerializeField] int _itemAmount;
 
     [Header("Visuals")]
     [SerializeField] float _rotationAngle;
     [SerializeField] float _verticalRange;
     [SerializeField] float _verticalSpeed;
+
+    public ItemType Type { get { return _itemType; } }
+    public int Amount { get { return _itemAmount; } }
 
     GameObject _floatingObject;
     float _verticalAngle;

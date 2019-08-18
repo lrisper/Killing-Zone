@@ -219,4 +219,26 @@ public class Player : MonoBehaviour
         }
 
     }
+
+    private void OnTriggerEnter(Collider otherCollider)
+    {
+        if (otherCollider.gameObject.GetComponent<ItemBox>() != null)
+        {
+            ItemBox itemBox = otherCollider.gameObject.GetComponent<ItemBox>();
+
+            GiveItem(itemBox.Type, itemBox.Amount);
+
+            Destroy(otherCollider.gameObject);
+        }
+    }
+
+    private void GiveItem(ItemBox.ItemType type, int amount)
+    {
+        if (type == ItemBox.ItemType.Pistol)
+        {
+            Pistol pistol = new Pistol();
+            pistol.TotalAmmunition = amount;
+            pistol.LoadClip();
+        }
+    }
 }

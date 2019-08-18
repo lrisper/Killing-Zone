@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public abstract class Weapon
 {
 
@@ -25,5 +26,12 @@ public abstract class Weapon
     public float CooldownTime { get { return _cooldownTime; } }
     public bool IsAutomatic { get { return _isAutomatic; } }
 
+    public void LoadClip()
+    {
+        int maxAmmunitionToLoad = _clipSize - _clipAmmunition;
+        int ammunitiontoLoad = System.Math.Min(maxAmmunitionToLoad, _totalAmmunition);
 
+        _clipAmmunition += ammunitiontoLoad;
+        _totalAmmunition -= ammunitiontoLoad;
+    }
 }
