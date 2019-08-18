@@ -7,8 +7,8 @@ public class Pistol : Weapon
     {
         _clipSize = 16;
         _maxAmmunition = 64;
-        _reloadTime = 2f;
-        _cooldownTime = .25f;
+        _reloadDuration = 2f;
+        _cooldownDuration = .25f;
         _isAutomatic = false;
         _weaponName = "Pistol";
 

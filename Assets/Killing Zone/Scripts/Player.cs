@@ -333,7 +333,13 @@ public class Player : MonoBehaviour
         {
             float timeElapsed = Time.deltaTime;
             bool isPressingTrigger = Input.GetAxis("Fire1") > 0.1f;
-            _weapon.Update(timeElapsed, isPressingTrigger);
+
+            bool hasShot = _weapon.Update(timeElapsed, isPressingTrigger);
+            if (hasShot)
+            {
+                _hud.UpdateWeapon(_weapon);
+            }
+
         }
 
     }
