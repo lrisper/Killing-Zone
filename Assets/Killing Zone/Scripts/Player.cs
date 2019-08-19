@@ -357,8 +357,33 @@ public class Player : MonoBehaviour
                 _hud.UpdateWeapon(_weapon);
             }
 
+            if (hasShot)
+            {
+                Shoot();
+            }
+
         }
 
+    }
+
+    private void Shoot()
+    {
+        //Debug.Log("Shoot");
+        RaycastHit hit;
+        Vector3 origin = _gameCamera.transform.position;
+        origin += _gameCamera.transform.forward * Vector3.Distance(_gameCamera.transform.position, transform.position);
+
+        // interaction logic
+#if UNITY_EDITOR
+        //Draw interaction line
+        Debug.DrawLine(origin, origin + _gameCamera.transform.forward * 1000, Color.red);
+#endif
+
+        if (Physics.Raycast(origin, _gameCamera.transform.forward, out hit))
+        {
+            GameObject target = hit.transform.gameObject;
+            Debug.Log(target.name);
+        }
     }
 }
 

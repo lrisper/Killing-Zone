@@ -15,6 +15,7 @@ public class GameCamera : MonoBehaviour
 
     float _verticalRotationAngle;
 
+    public Vector3 FollowOffset { get { return _followOffset; } }
 
     // Start is called before the first frame update
     void Start()
