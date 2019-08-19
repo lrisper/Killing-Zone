@@ -292,39 +292,50 @@ public class Player : MonoBehaviour
 
     private void GiveItem(ItemBox.ItemType type, int amount)
     {
-        if (type == ItemBox.ItemType.Pistol)
+
+        // create a weapon reference
+        Weapon currentWeapon = null;
+
+        // check if we already have weapon
+        for (int i = 0; i < _weapons.Count; i++)
         {
-            // create a weapon reference
-            Weapon currentWeapon = null;
-
-            // check if we already have weapon
-            for (int i = 0; i < _weapons.Count; i++)
+            if (type == ItemBox.ItemType.Pistol && _weapons[i] is Pistol)
             {
-                if (_weapons[i] is Pistol)
-                {
-                    currentWeapon = _weapons[i];
-                }
+                currentWeapon = _weapons[i];
             }
+            else if (type == ItemBox.ItemType.MachineGun && _weapons[i] is MachineGun)
+            {
+                currentWeapon = _weapons[i];
+            }
+        }
 
-            // create weapon if we don't have one and add to list
-            if (currentWeapon == null)
+        // create weapon if we don't have one and add to list
+        if (currentWeapon == null)
+        {
+            if (type == ItemBox.ItemType.Pistol)
             {
                 currentWeapon = new Pistol();
-                _weapons.Add(currentWeapon);
             }
-
-
-            currentWeapon.AddAmmunition(amount);
-            currentWeapon.LoadClip();
-
-            if (currentWeapon == _weapon)
+            else if (type == ItemBox.ItemType.MachineGun)
             {
-                _hud.UpdateWeapon(_weapon);
+                currentWeapon = new MachineGun();
             }
 
-            Debug.Log(currentWeapon.ClipAmmunition);
-            Debug.Log(currentWeapon.TotalAmmunition);
+            _weapons.Add(currentWeapon);
         }
+
+
+        currentWeapon.AddAmmunition(amount);
+        currentWeapon.LoadClip();
+
+        if (currentWeapon == _weapon)
+        {
+            _hud.UpdateWeapon(_weapon);
+        }
+
+        Debug.Log(currentWeapon.ClipAmmunition);
+        Debug.Log(currentWeapon.TotalAmmunition);
+
     }
 
     private void UpdateWeapon()

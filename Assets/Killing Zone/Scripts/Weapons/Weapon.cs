@@ -103,9 +103,9 @@ public abstract class Weapon
 
     public void Reload()
     {
-        // only reload weapon if weapon is not currently reloading
-        // and the clip is not full
-        if (_reloadTimer <= 0 && _clipAmmunition < _clipSize)
+        // only reload weapon if weapon is not currently reloading,
+        // and the clip is not full and we have more bullets left
+        if (_reloadTimer <= 0 && _clipAmmunition < _clipSize && _totalAmmunition > 0)
         {
             _reloadTimer = _reloadDuration;
         }
