@@ -39,6 +39,8 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject _obstacleContainer;
     [SerializeField] GameObject[] _obstaclePrefabs;
 
+    [Header("Weapons")]
+    [SerializeField] GameObject _shootOrigin;
 
     bool _isFocalPointOnLeft = true;
     int _resources;
@@ -369,21 +371,33 @@ public class Player : MonoBehaviour
     private void Shoot()
     {
         //Debug.Log("Shoot");
-        RaycastHit hit;
-        Vector3 origin = _gameCamera.transform.position;
-        origin += _gameCamera.transform.forward * Vector3.Distance(_gameCamera.transform.position, transform.position);
+        float distanceFromCamera = Vector3.Distance(_gameCamera.transform.position, transform.position);
 
-        // interaction logic
-#if UNITY_EDITOR
-        //Draw interaction line
-        Debug.DrawLine(origin, origin + _gameCamera.transform.forward * 1000, Color.red);
-#endif
-
-        if (Physics.Raycast(origin, _gameCamera.transform.forward, out hit))
+        RaycastHit targetHit;
+        if (Physics.Raycast(_gameCamera.transform.position + (_gameCamera.transform.forward * distanceFromCamera), _gameCamera.transform.forward, out targetHit))
         {
-            GameObject target = hit.transform.gameObject;
-            Debug.Log(target.name);
+            Vector3 hitPosition = targetHit.point;
+
+            Vector3 shootDirection = (hitPosition - _shootOrigin.transform.position).normalized;
+
+            RaycastHit shootHit;
+            if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
+            {
+                GameObject target = shootHit.transform.gameObject;
+
+                //Debug.Log(target.name);
+
+#if UNITY_EDITOR
+                //Draw line to show shooting ray
+                Debug.DrawLine(_shootOrigin.transform.position, _shootOrigin.transform.position + shootDirection * 100, Color.red);
+#endif
+            }
         }
+
+
+
+
+
     }
 }
 

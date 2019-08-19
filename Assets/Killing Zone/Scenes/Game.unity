@@ -15964,6 +15964,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1492233161}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1497819113 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 418840, guid: 7737647c22c1fc64a88d5cd030c352ce,
+    type: 3}
+  m_PrefabInstance: {fileID: 1637282827}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1497953372
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19693,6 +19699,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1776119548}
   - component: {fileID: 1776119547}
+  - component: {fileID: 1776119549}
   m_Layer: 0
   m_Name: Water4SimpleReflectionMain Camera
   m_TagString: Untagged
@@ -19749,13 +19756,22 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1776119546}
-  m_LocalRotation: {x: 0.017046379, y: 0.9820077, z: 0.10945312, w: -0.15293907}
-  m_LocalPosition: {x: 222.84589, y: -155.98831, z: 296.81512}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.34000003, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 854710601}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!45 &1776119549
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776119546}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 0}
 --- !u!1001 &1784031542
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20436,6 +20452,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1875729797}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1876210574
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1876210575}
+  m_Layer: 0
+  m_Name: ShootingOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1876210575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876210574}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.097, z: -0.069}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1497819113}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1886604109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21170,6 +21216,7 @@ MonoBehaviour:
   - {fileID: 3456327334537288682, guid: 5609d2d42740d43bda135de98d79302f, type: 3}
   - {fileID: 1608130089658091521, guid: a8d31e193f5c94dc1bcb450af830f94e, type: 3}
   - {fileID: 3289848610162924840, guid: fa76db7bd28f44d16bcb8c6e9367a587, type: 3}
+  _shootOrigin: {fileID: 1876210574}
 --- !u!4 &1964582538 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 408730, guid: 7737647c22c1fc64a88d5cd030c352ce,
