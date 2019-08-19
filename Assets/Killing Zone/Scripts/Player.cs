@@ -310,6 +310,10 @@ public class Player : MonoBehaviour
             {
                 currentWeapon = _weapons[i];
             }
+            else if (type == ItemBox.ItemType.Shotgun && _weapons[i] is Shotgun)
+            {
+                currentWeapon = _weapons[i];
+            }
         }
 
         // create weapon if we don't have one and add to list
@@ -323,6 +327,11 @@ public class Player : MonoBehaviour
             {
                 currentWeapon = new MachineGun();
             }
+            else if (type == ItemBox.ItemType.Shotgun)
+            {
+                currentWeapon = new Shotgun();
+            }
+
 
             _weapons.Add(currentWeapon);
         }
@@ -371,47 +380,54 @@ public class Player : MonoBehaviour
 
     private void Shoot()
     {
-        //Debug.Log("Shoot");
-        float distanceFromCamera = Vector3.Distance(_gameCamera.transform.position, transform.position);
-
-        RaycastHit targetHit;
-        if (Physics.Raycast(_gameCamera.transform.position + (_gameCamera.transform.forward * distanceFromCamera), _gameCamera.transform.forward, out targetHit))
+        int amountOfBullets = 1;
+        if (_weapon is Shotgun)
         {
-            Vector3 hitPosition = targetHit.point;
-            hitPosition = new Vector3(
-                hitPosition.x + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
-                 hitPosition.y + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
-                  hitPosition.z + Random.Range(-_weapon.AimVariation, _weapon.AimVariation));
+            amountOfBullets = ((Shotgun)_weapon).AmountOfBullets;
+        }
+        for (int i = 0; i < amountOfBullets; i++)
+        {
+            //Debug.Log("Shoot");
+            float distanceFromCamera = Vector3.Distance(_gameCamera.transform.position, transform.position);
 
-            Vector3 shootDirection = (hitPosition - _shootOrigin.transform.position).normalized;
-
-            RaycastHit shootHit;
-            if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
+            RaycastHit targetHit;
+            if (Physics.Raycast(_gameCamera.transform.position + (_gameCamera.transform.forward * distanceFromCamera), _gameCamera.transform.forward, out targetHit))
             {
-                GameObject debugPositionInstance = Instantiate(_debugPositionPrefab);
-                _debugPositionPrefab.transform.position = shootHit.point;
+                Vector3 hitPosition = targetHit.point;
+                hitPosition = new Vector3(
+                    hitPosition.x + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
+                     hitPosition.y + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
+                      hitPosition.z + Random.Range(-_weapon.AimVariation, _weapon.AimVariation));
 
-                Destroy(debugPositionInstance, .5f);
+                Vector3 shootDirection = (hitPosition - _shootOrigin.transform.position).normalized;
 
-                GameObject target = shootHit.transform.gameObject;
-
-                if (target.tag == "obstacleShape")
+                RaycastHit shootHit;
+                if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
                 {
-                    target.transform.parent.gameObject.GetComponent<Obstacle>().Hit();
-                }
+                    GameObject debugPositionInstance = Instantiate(_debugPositionPrefab);
+                    _debugPositionPrefab.transform.position = shootHit.point;
 
-                //Debug.Log(target.name);
+                    Destroy(debugPositionInstance, .5f);
+
+                    GameObject target = shootHit.transform.gameObject;
+
+                    if (target.tag == "obstacleShape")
+                    {
+                        target.transform.parent.gameObject.GetComponent<Obstacle>().Hit();
+                    }
+
+                    //Debug.Log(target.name);
 
 #if UNITY_EDITOR
-                //Draw line to show shooting ray
-                Debug.DrawLine(_shootOrigin.transform.position, _shootOrigin.transform.position + shootDirection * 100, Color.red);
+                    //Draw line to show shooting ray
+                    Debug.DrawLine(_shootOrigin.transform.position, _shootOrigin.transform.position + shootDirection * 100, Color.red);
 #endif
+                }
             }
+
+
+
         }
-
-
-
-
 
     }
 }
