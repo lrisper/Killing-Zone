@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Player : MonoBehaviour
 {
@@ -41,6 +39,9 @@ public class Player : MonoBehaviour
 
     [Header("Weapons")]
     [SerializeField] GameObject _shootOrigin;
+
+    [Header("Debug")]
+    [SerializeField] GameObject _debugPositionPrefab;
 
     bool _isFocalPointOnLeft = true;
     int _resources;
@@ -377,12 +378,21 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(_gameCamera.transform.position + (_gameCamera.transform.forward * distanceFromCamera), _gameCamera.transform.forward, out targetHit))
         {
             Vector3 hitPosition = targetHit.point;
+            hitPosition = new Vector3(
+                hitPosition.x + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
+                 hitPosition.y + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
+                  hitPosition.z + Random.Range(-_weapon.AimVariation, _weapon.AimVariation));
 
             Vector3 shootDirection = (hitPosition - _shootOrigin.transform.position).normalized;
 
             RaycastHit shootHit;
             if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
             {
+                GameObject debugPositionInstance = Instantiate(_debugPositionPrefab);
+                _debugPositionPrefab.transform.position = shootHit.point;
+
+                Destroy(debugPositionInstance, .5f);
+
                 GameObject target = shootHit.transform.gameObject;
 
                 //Debug.Log(target.name);

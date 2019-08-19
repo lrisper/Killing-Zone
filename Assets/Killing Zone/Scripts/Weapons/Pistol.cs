@@ -11,6 +11,7 @@ public class Pistol : Weapon
         _cooldownDuration = .10f;
         _isAutomatic = false;
         _weaponName = "Pistol";
+        _aimVariation = .05f;
 
     }
 }
