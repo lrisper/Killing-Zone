@@ -395,6 +395,11 @@ public class Player : MonoBehaviour
 
                 GameObject target = shootHit.transform.gameObject;
 
+                if (target.tag == "obstacleShape")
+                {
+                    target.transform.parent.gameObject.GetComponent<Obstacle>().Hit();
+                }
+
                 //Debug.Log(target.name);
 
 #if UNITY_EDITOR
