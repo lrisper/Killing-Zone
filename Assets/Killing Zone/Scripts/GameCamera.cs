@@ -21,6 +21,7 @@ public class GameCamera : MonoBehaviour
     float _verticalRotationAngle;
 
     public Vector3 FollowOffset { get { return _followOffset; } }
+    public bool IsZoomedIn { get { return Mathf.RoundToInt(GetComponent<Camera>().fieldOfView) == Mathf.RoundToInt(_zoomInFOV); } }
 
     // Start is called before the first frame update
     void Start()
@@ -61,7 +62,7 @@ public class GameCamera : MonoBehaviour
 
     public void TrigerZoom()
     {
-        if (Mathf.RoundToInt(GetComponent<Camera>().fieldOfView) == Mathf.RoundToInt(_zoomInFOV))
+        if (IsZoomedIn)
         {
             ZoomOut();
         }

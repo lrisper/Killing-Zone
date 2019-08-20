@@ -221,6 +221,7 @@ public class Player : MonoBehaviour
             if (!(_weapon is Sniper))
             {
                 _gameCamera.ZoomOut();
+                _hud.sniperAimVisibilty = false;
             }
         }
 
@@ -236,6 +237,7 @@ public class Player : MonoBehaviour
 
         // zoom the camera out
         _gameCamera.ZoomOut();
+        _hud.sniperAimVisibilty = false;
 
 
         // cycle between tools
@@ -398,6 +400,7 @@ public class Player : MonoBehaviour
                 if (Input.GetMouseButtonDown(1))
                 {
                     _gameCamera.TrigerZoom();
+                    _hud.sniperAimVisibilty = _gameCamera.IsZoomedIn;
                 }
             }
         }

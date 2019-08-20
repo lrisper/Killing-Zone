@@ -11,6 +11,7 @@ public class HUDController : MonoBehaviour
     [SerializeField] Text _weaponNameText;
     [SerializeField] Text _weaponAmmunitionText;
     [SerializeField] RectTransform _weaponReloadBar;
+    [SerializeField] GameObject _sniperAim;
 
     [Header("Tool Selctor")]
     [SerializeField] GameObject _toolFocus;
@@ -51,10 +52,15 @@ public class HUDController : MonoBehaviour
         }
     }
 
+    public bool sniperAimVisibilty { set { _sniperAim.SetActive(value); } }
+
     private void Start()
     {
         targetFocusX = _toolContainer.transform.GetChild(0).transform.position.x;
         _toolFocus.transform.position = new Vector3(targetFocusX, _toolFocus.transform.position.y);
+
+        // hide sniper aim
+        _sniperAim.SetActive(false);
     }
 
     private void Update()
