@@ -15,6 +15,6 @@ public class Shotgun : Weapon
         _cooldownDuration = 1f;
         _isAutomatic = false;
         _weaponName = "Shotgun";
-        _aimVariation = .6f;
+        _aimVariation = .08f;
     }
 }

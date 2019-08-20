@@ -12,7 +12,7 @@ public class MachineGun : Weapon
         _cooldownDuration = .08f;
         _isAutomatic = true;
         _weaponName = "Machine Gun";
-        _aimVariation = .2f;
+        _aimVariation = .04f;
 
     }
 }
