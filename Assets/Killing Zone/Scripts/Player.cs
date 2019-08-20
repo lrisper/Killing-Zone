@@ -216,6 +216,12 @@ public class Player : MonoBehaviour
             {
                 Destroy(_currentObstacle);
             }
+
+            // zoom out
+            if (!(_weapon is Sniper))
+            {
+                _gameCamera.ZoomOut();
+            }
         }
 
 
@@ -227,6 +233,10 @@ public class Player : MonoBehaviour
 
         _weapon = null;
         _hud.UpdateWeapon(_weapon);
+
+        // zoom the camera out
+        _gameCamera.ZoomOut();
+
 
         // cycle between tools
         int currentToolIndex = (int)_tool;
@@ -314,6 +324,10 @@ public class Player : MonoBehaviour
             {
                 currentWeapon = _weapons[i];
             }
+            else if (type == ItemBox.ItemType.Sniper && _weapons[i] is Sniper)
+            {
+                currentWeapon = _weapons[i];
+            }
         }
 
         // create weapon if we don't have one and add to list
@@ -330,6 +344,10 @@ public class Player : MonoBehaviour
             else if (type == ItemBox.ItemType.Shotgun)
             {
                 currentWeapon = new Shotgun();
+            }
+            else if (type == ItemBox.ItemType.Sniper)
+            {
+                currentWeapon = new Sniper();
             }
 
 
@@ -374,8 +392,15 @@ public class Player : MonoBehaviour
                 Shoot();
             }
 
+            // zoom logic
+            if (_weapon is Sniper)
+            {
+                if (Input.GetMouseButtonDown(1))
+                {
+                    _gameCamera.TrigerZoom();
+                }
+            }
         }
-
     }
 
     private void Shoot()
