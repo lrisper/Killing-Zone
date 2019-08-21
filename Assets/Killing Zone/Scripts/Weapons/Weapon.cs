@@ -18,6 +18,8 @@ public abstract class Weapon
     protected bool _isAutomatic;
     protected string _weaponName = "";
     protected float _aimVariation;
+    protected float _damage;
+
 
     // private fields
     float _reloadTimer = -1f;
@@ -36,6 +38,7 @@ public abstract class Weapon
     public string WeaponName { get { return _weaponName; } }
     public float ReloadTimer { get { return _reloadTimer; } }
     public float AimVariation { get { return _aimVariation; } }
+    public float Damage { get { return _damage; } }
 
     public void LoadClip()
     {

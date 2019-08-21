@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Obstacle : MonoBehaviour
+public class Obstacle : MonoBehaviour, IDamgeable
 {
-    [SerializeField] int _health;
+    [SerializeField] float _health;
     [SerializeField] int _cost;
     [SerializeField] float _hitSmoothness;
 
@@ -54,15 +54,16 @@ public class Obstacle : MonoBehaviour
 
     }
 
-    public void Hit()
+    public int Damage(float amount)
     {
         transform.localScale = Vector3.one * 0.8f;
 
-        _health--;
+        _health -= amount;
         if (_health <= 0)
         {
             _targetScale = 0;
             Destroy(gameObject, 1f);
         }
+        return 0;
     }
 }

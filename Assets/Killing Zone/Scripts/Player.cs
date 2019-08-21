@@ -193,7 +193,7 @@ public class Player : MonoBehaviour
 
                     ResourceObject resourceObject = hit.transform.GetComponent<ResourceObject>();
                     Debug.Log("hit the object");
-                    int collectedResources = resourceObject.Collect();
+                    int collectedResources = resourceObject.Damage(_weapon.Damage);
                     _resources += collectedResources;
                     _hud.Resources = _resources;
                 }
@@ -450,11 +450,14 @@ public class Player : MonoBehaviour
 
                         Destroy(debugPositionInstance, .5f);
 
-                        GameObject target = shootHit.transform.gameObject;
-
-                        if (target.tag == "obstacleShape")
+                        if (shootHit.transform.GetComponent<IDamgeable>() != null)
                         {
-                            target.transform.parent.gameObject.GetComponent<Obstacle>().Hit();
+                            shootHit.transform.GetComponent<IDamgeable>().Damage(_weapon.Damage);
+                        }
+
+                        if (shootHit.transform.GetComponentInParent<IDamgeable>() != null)
+                        {
+                            shootHit.transform.GetComponent<IDamgeable>().Damage(_weapon.Damage);
                         }
 
                         //Debug.Log(target.name);

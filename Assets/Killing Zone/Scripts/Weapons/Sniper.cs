@@ -13,5 +13,6 @@ public class Sniper : Weapon
         _isAutomatic = false;
         _weaponName = "Sinper";
         _aimVariation = 0.0f;
+        _damage = 80f;
     }
 }

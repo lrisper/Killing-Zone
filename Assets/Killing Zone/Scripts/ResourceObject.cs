@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceObject : MonoBehaviour
+public class ResourceObject : MonoBehaviour, IDamgeable
 {
     [SerializeField] int _resourceAmount;
-    [SerializeField] int _amoumtOfHits;
+    [SerializeField] float _amoumtOfHits;
     [SerializeField] float _hitScale;
     [SerializeField] float _hitSmoothness;
 
-    int _hits;
+    float _hits;
     float _targetScale;
 
     // Start is called before the first frame update
@@ -28,13 +28,13 @@ public class ResourceObject : MonoBehaviour
             );
     }
 
-    public int Collect()
+    public int Damage(float amount)
     {
-        _hits++;
+        _hits += amount;
 
         transform.localScale = Vector3.one * _hitScale;
 
-        if (_hits == _amoumtOfHits)
+        if (_hits >= _amoumtOfHits)
         {
             Destroy(gameObject, 1);
             _targetScale = 0;

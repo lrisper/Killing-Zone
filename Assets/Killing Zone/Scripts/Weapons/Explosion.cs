@@ -12,6 +12,15 @@ public class Explosion : MonoBehaviour
         foreach (RaycastHit hit in hits)
         {
             Debug.Log(hit.transform.name);
+            if (hit.transform.GetComponent<IDamgeable>() != null)
+            {
+                hit.transform.GetComponent<IDamgeable>().Damage(damage);
+            }
+
+            if (hit.transform.GetComponentInParent<IDamgeable>() != null)
+            {
+                hit.transform.GetComponent<IDamgeable>().Damage(damage);
+            }
         }
         Destroy(gameObject, .5f);
     }
