@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
 
     [Header("Weapons")]
     [SerializeField] GameObject _shootOrigin;
+    [SerializeField] GameObject _rocketPrefab;
 
     [Header("Debug")]
     [SerializeField] GameObject _debugPositionPrefab;
@@ -330,6 +331,10 @@ public class Player : MonoBehaviour
             {
                 currentWeapon = _weapons[i];
             }
+            else if (type == ItemBox.ItemType.RocketLauncher && _weapons[i] is RocketLauncher)
+            {
+                currentWeapon = _weapons[i];
+            }
         }
 
         // create weapon if we don't have one and add to list
@@ -350,6 +355,10 @@ public class Player : MonoBehaviour
             else if (type == ItemBox.ItemType.Sniper)
             {
                 currentWeapon = new Sniper();
+            }
+            else if (type == ItemBox.ItemType.RocketLauncher)
+            {
+                currentWeapon = new RocketLauncher();
             }
 
 
@@ -431,31 +440,37 @@ public class Player : MonoBehaviour
 
                 shootDirection.Normalize();
 
-                RaycastHit shootHit;
-                if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
+                if (!(_weapon is RocketLauncher))
                 {
-                    GameObject debugPositionInstance = Instantiate(_debugPositionPrefab);
-                    _debugPositionPrefab.transform.position = shootHit.point;
-
-                    Destroy(debugPositionInstance, .5f);
-
-                    GameObject target = shootHit.transform.gameObject;
-
-                    if (target.tag == "obstacleShape")
+                    RaycastHit shootHit;
+                    if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
                     {
-                        target.transform.parent.gameObject.GetComponent<Obstacle>().Hit();
-                    }
+                        GameObject debugPositionInstance = Instantiate(_debugPositionPrefab);
+                        _debugPositionPrefab.transform.position = shootHit.point;
 
-                    //Debug.Log(target.name);
+                        Destroy(debugPositionInstance, .5f);
+
+                        GameObject target = shootHit.transform.gameObject;
+
+                        if (target.tag == "obstacleShape")
+                        {
+                            target.transform.parent.gameObject.GetComponent<Obstacle>().Hit();
+                        }
+
+                        //Debug.Log(target.name);
 
 #if UNITY_EDITOR
-                    //Draw line to show shooting ray
-                    Debug.DrawLine(_shootOrigin.transform.position, _shootOrigin.transform.position + shootDirection * 100, Color.red);
+                        //Draw line to show shooting ray
+                        Debug.DrawLine(_shootOrigin.transform.position, _shootOrigin.transform.position + shootDirection * 100, Color.red);
 #endif
+                    }
                 }
+                else
+                {
+
+                }
+
             }
-
-
 
         }
 
