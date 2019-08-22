@@ -455,7 +455,7 @@ public class Player : MonoBehaviour
                             shootHit.transform.GetComponent<IDamgeable>().Damage(_weapon.Damage);
                         }
 
-                        if (shootHit.transform.GetComponentInParent<IDamgeable>() != null)
+                        else if (shootHit.transform.GetComponentInParent<IDamgeable>() != null)
                         {
                             shootHit.transform.GetComponent<IDamgeable>().Damage(_weapon.Damage);
                         }

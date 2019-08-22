@@ -1611,6 +1611,8 @@ MonoBehaviour:
   - {fileID: 1608130089658091521, guid: a8d31e193f5c94dc1bcb450af830f94e, type: 3}
   - {fileID: 3289848610162924840, guid: fa76db7bd28f44d16bcb8c6e9367a587, type: 3}
   _shootOrigin: {fileID: 1876210574}
+  _rocketPrefab: {fileID: 3114577296202897868, guid: 615023f115d4e476287e06eda33474b3,
+    type: 3}
   _debugPositionPrefab: {fileID: 6198757044718105609, guid: 8241e07c4995143ba96ef4c493496cfb,
     type: 3}
 --- !u!1 &150244
