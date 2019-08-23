@@ -7,7 +7,15 @@ public class Enemy : MonoBehaviour, IDamgeable
     [SerializeField] float _health;
     [SerializeField] float _hitSmoothness;
 
+    protected Rigidbody _enemyRigibody;
+
     float _targerScale = 1f;
+
+
+    void Awake()
+    {
+        _enemyRigibody = transform.GetComponent<Rigidbody>();
+    }
 
     // Start is called before the first frame update
     void Start()

@@ -7,6 +7,7 @@ public class FlyingEnemy : Enemy
 {
     [Header("Flying")]
     [SerializeField] float _distanceFromFloor;
+    [SerializeField] float _hoverSmoothness;
     [SerializeField] float _bounceAmplitude;
     [SerializeField] float _bounceSpeed;
 
@@ -36,6 +37,9 @@ public class FlyingEnemy : Enemy
 
     private void Chase()
     {
+        Vector3 targetVelocity = Vector3.zero;
+
+
         if (_target = null)
         {
             // find a player
@@ -49,11 +53,30 @@ public class FlyingEnemy : Enemy
 
             }
 
+            // check if target is too far
+            if (_target != null && Vector3.Distance(transform.position, _target.transform.position) > _chasingRange)
+            {
+                _target = null;
+            }
+
             // chase the target
             if (_target != null)
             {
-                //
+                Vector3 direction = (_target.transform.position - transform.position).normalized;
+
+                // remove vertical component
+                direction = new Vector3(direction.x, 0, direction.z);
+                direction.Normalize();
+
+                // calculate taeget velocity
+                targetVelocity = direction * _chasingSpeed;
             }
+
+            // make the enemy move
+            _enemyRigibody.velocity = new Vector3(
+                Mathf.Lerp(_enemyRigibody.velocity.x, targetVelocity.x, Time.deltaTime * _chasingSmoothness),
+                Mathf.Lerp(_enemyRigibody.velocity.y, targetVelocity.y, Time.deltaTime * _chasingSmoothness),
+                Mathf.Lerp(_enemyRigibody.velocity.z, targetVelocity.z, Time.deltaTime * _chasingSmoothness));
 
         }
     }
@@ -82,7 +105,10 @@ public class FlyingEnemy : Enemy
                targetPos.z);
 
             // apply the position
-            transform.position = targetPos;
+            transform.position = new Vector3(
+                Mathf.Lerp(transform.position.x, targetPos.x, Time.deltaTime * _hoverSmoothness),
+                Mathf.Lerp(transform.position.y, targetPos.y, Time.deltaTime * _hoverSmoothness),
+                Mathf.Lerp(transform.position.z, targetPos.z, Time.deltaTime * _hoverSmoothness));
 
 
         }
