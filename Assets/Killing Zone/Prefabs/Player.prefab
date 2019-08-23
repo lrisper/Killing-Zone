@@ -2394,19 +2394,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _focalPoint: {fileID: 8054667436698278727}
+  _RotationPoint: {fileID: 8054667437885914071}
   _focalDistance: 0.4
   _changefocalSideKey: 113
   _focalSmoothness: 7.5
-  _gameCamera: {fileID: 0}
   _interactionKey: 101
   _interactionDistance: 2.5
-  _hud: {fileID: 0}
   _toolSwitchKey: 9
   _tool: 0
   _initialResourceCount: 100
   _resourceCollectionCooldown: 1
-  _obstaclePlacementContainer: {fileID: 0}
-  _obstacleContainer: {fileID: 0}
   _obstaclePrefabs:
   - {fileID: 3456327334537288682, guid: 5609d2d42740d43bda135de98d79302f, type: 3}
   - {fileID: 1608130089658091521, guid: a8d31e193f5c94dc1bcb450af830f94e, type: 3}

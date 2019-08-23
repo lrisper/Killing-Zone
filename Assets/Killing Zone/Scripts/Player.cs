@@ -17,17 +17,14 @@ public class Player : MonoBehaviour, IDamgeable
 
     [Header("Focal Point Variables")]
     [SerializeField] GameObject _focalPoint;
+    [SerializeField] GameObject _RotationPoint;
     [SerializeField] float _focalDistance;
     [SerializeField] KeyCode _changefocalSideKey;
     [SerializeField] float _focalSmoothness = 7.5f;
 
     [Header("Interaction")]
-    [SerializeField] GameCamera _gameCamera;
     [SerializeField] KeyCode _interactionKey;
     [SerializeField] float _interactionDistance;
-
-    [Header("Interface")]
-    [SerializeField] HUDController _hud;
 
     [Header("Game Play")]
     [SerializeField] KeyCode _toolSwitchKey;
@@ -36,8 +33,6 @@ public class Player : MonoBehaviour, IDamgeable
     [SerializeField] float _resourceCollectionCooldown;
 
     [Header("Obstacles")]
-    [SerializeField] GameObject _obstaclePlacementContainer;
-    [SerializeField] GameObject _obstacleContainer;
     [SerializeField] GameObject[] _obstaclePrefabs;
 
     [Header("Weapons")]
@@ -52,28 +47,46 @@ public class Player : MonoBehaviour, IDamgeable
     float _resourceCollectionCooldownTimer = 0;
     GameObject _currentObstacle;
     bool _obstaclePlacementLock;
-    //bool _isUsingTools = true; // not being used
 
     List<Weapon> _weapons;
     Weapon _weapon;
     float _health;
 
+    HUDController _hud;
+    GameCamera _gameCamera;
+    GameObject _obstaclePlacementContainer;
+    GameObject _obstacleContainer;
+
 
     // Start is called before the first frame update
     void Start()
     {
+
         Cursor.lockState = CursorLockMode.Locked;
 
+        // initialize values
         _health = 100;
-        _hud.Health = _health;
-
         _resources = _initialResourceCount;
+        _weapons = new List<Weapon>();
 
+        // game camera
+        _gameCamera = FindObjectOfType<GameCamera>();
+        _obstaclePlacementContainer = _gameCamera.ObstaclePlacementContainer;
+        _gameCamera.Target = _focalPoint;
+        _gameCamera.RotationAnchorObject = _RotationPoint;
+
+
+        // hud Elements
+        _hud = FindObjectOfType<HUDController>();
+        _hud.ShowScreen("regular");
+        _hud.Health = _health;
         _hud.Resources = _resources;
         _hud.Tool = 0;
         _hud.UpdateWeapon(null);
 
-        _weapons = new List<Weapon>();
+        // obstscle Containers
+        _obstacleContainer = GameObject.Find("ObstacleContainer");
+
 
     }
 
@@ -213,8 +226,6 @@ public class Player : MonoBehaviour, IDamgeable
     {
         if (index < _weapons.Count)
         {
-            //_isUsingTools = false;
-
             _weapon = _weapons[index];
             _hud.UpdateWeapon(_weapon);
 
@@ -239,15 +250,12 @@ public class Player : MonoBehaviour, IDamgeable
 
     private void SwitchTool()
     {
-        //_isUsingTools = true;
-
         _weapon = null;
         _hud.UpdateWeapon(_weapon);
 
         // zoom the camera out
         _gameCamera.ZoomOut();
         _hud.sniperAimVisibilty = false;
-
 
         // cycle between tools
         int currentToolIndex = (int)_tool;
@@ -267,21 +275,14 @@ public class Player : MonoBehaviour, IDamgeable
         if (_tool == PlayerTool.ObstacleVertical)
         {
             obstacleToAddIndex = 0;
-            // show obstacle in placement mode
-            //Debug.Log("Choose OV");
-
         }
         else if (_tool == PlayerTool.ObstacleRamp)
         {
             obstacleToAddIndex = 1;
-            //
-            //Debug.Log("Choose OR");
         }
         else if (_tool == PlayerTool.ObstacleHorizontal)
         {
             obstacleToAddIndex = 2;
-            //
-            //Debug.Log("Choose OH");
         }
 
         if (_currentObstacle != null)
@@ -368,11 +369,8 @@ public class Player : MonoBehaviour, IDamgeable
             {
                 currentWeapon = new RocketLauncher();
             }
-
-
             _weapons.Add(currentWeapon);
         }
-
 
         currentWeapon.AddAmmunition(amount);
         currentWeapon.LoadClip();
@@ -381,10 +379,6 @@ public class Player : MonoBehaviour, IDamgeable
         {
             _hud.UpdateWeapon(_weapon);
         }
-
-        //Debug.Log(currentWeapon.ClipAmmunition);
-        //Debug.Log(currentWeapon.TotalAmmunition);
-
     }
 
     private void UpdateWeapon()
@@ -432,7 +426,6 @@ public class Player : MonoBehaviour, IDamgeable
         }
         for (int i = 0; i < amountOfBullets; i++)
         {
-            //Debug.Log("Shoot");
             float distanceFromCamera = Vector3.Distance(_gameCamera.transform.position, transform.position);
 
             RaycastHit targetHit;
@@ -468,8 +461,6 @@ public class Player : MonoBehaviour, IDamgeable
                             shootHit.transform.GetComponent<IDamgeable>().Damage(_weapon.Damage);
                         }
 
-                        //Debug.Log(target.name);
-
 #if UNITY_EDITOR
                         //Draw line to show shooting ray
                         Debug.DrawLine(_shootOrigin.transform.position, _shootOrigin.transform.position + shootDirection * 100, Color.red);
@@ -481,13 +472,9 @@ public class Player : MonoBehaviour, IDamgeable
                     GameObject rocket = Instantiate(_rocketPrefab);
                     rocket.transform.position = _shootOrigin.transform.position + shootDirection;
                     rocket.GetComponent<Rocket>().Shoot(shootDirection);
-
                 }
-
             }
-
         }
-
     }
 
     public int Damage(float amount)
@@ -506,15 +493,9 @@ public class Player : MonoBehaviour, IDamgeable
                     OnPlayerDied();
                 }
             }
-
             _hud.Health = _health;
-
-
-            //Debug.Log(amount);
         }
         return 0;
     }
-
-
 }
 

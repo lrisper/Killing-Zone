@@ -5,16 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class GameSceneController : MonoBehaviour
 {
-    // single player mode
-    //[Header("Gameplay")]
-    //[SerializeField] Player _player;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        // single player mode
-        //_player.OnPlayerDied += OnPlayerDied;
+
     }
 
     // Update is called once per frame

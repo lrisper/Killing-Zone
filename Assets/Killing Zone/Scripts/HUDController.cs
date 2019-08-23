@@ -66,7 +66,7 @@ public class HUDController : MonoBehaviour
 
     private void Start()
     {
-        ShowScreen("regular");
+        ShowScreen("");
 
         targetFocusX = _toolContainer.transform.GetChild(0).transform.position.x;
         _toolFocus.transform.position = new Vector3(targetFocusX, _toolFocus.transform.position.y);
