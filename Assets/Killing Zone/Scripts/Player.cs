@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 
 public class Player : MonoBehaviour, IDamgeable
 {
+    public delegate void DiedDelegate();
+    public event DiedDelegate OnPlayerDied;
     public enum PlayerTool
     {
         pickaxe,
@@ -267,20 +268,20 @@ public class Player : MonoBehaviour, IDamgeable
         {
             obstacleToAddIndex = 0;
             // show obstacle in placement mode
-            Debug.Log("Choose OV");
+            //Debug.Log("Choose OV");
 
         }
         else if (_tool == PlayerTool.ObstacleRamp)
         {
             obstacleToAddIndex = 1;
             //
-            Debug.Log("Choose OR");
+            //Debug.Log("Choose OR");
         }
         else if (_tool == PlayerTool.ObstacleHorizontal)
         {
             obstacleToAddIndex = 2;
             //
-            Debug.Log("Choose OH");
+            //Debug.Log("Choose OH");
         }
 
         if (_currentObstacle != null)
@@ -381,8 +382,8 @@ public class Player : MonoBehaviour, IDamgeable
             _hud.UpdateWeapon(_weapon);
         }
 
-        Debug.Log(currentWeapon.ClipAmmunition);
-        Debug.Log(currentWeapon.TotalAmmunition);
+        //Debug.Log(currentWeapon.ClipAmmunition);
+        //Debug.Log(currentWeapon.TotalAmmunition);
 
     }
 
@@ -500,7 +501,10 @@ public class Player : MonoBehaviour, IDamgeable
                 Destroy(gameObject);
                 _hud.ShowScreen("gameOver");
 
-                Invoke("ReloadGame", 3);
+                if (OnPlayerDied != null)
+                {
+                    OnPlayerDied();
+                }
             }
 
             _hud.Health = _health;
@@ -511,9 +515,6 @@ public class Player : MonoBehaviour, IDamgeable
         return 0;
     }
 
-    public void ReloadGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+
 }
 
