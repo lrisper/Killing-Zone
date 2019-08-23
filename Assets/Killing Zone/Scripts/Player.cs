@@ -52,7 +52,7 @@ public class Player : MonoBehaviour, IDamgeable
     float _resourceCollectionCooldownTimer = 0;
     GameObject _currentObstacle;
     bool _obstaclePlacementLock;
-    bool _isUsingTools = true;
+    //bool _isUsingTools = true; // not being used
 
     List<Weapon> _weapons;
     Weapon _weapon;
@@ -213,7 +213,7 @@ public class Player : MonoBehaviour, IDamgeable
     {
         if (index < _weapons.Count)
         {
-            _isUsingTools = false;
+            //_isUsingTools = false;
 
             _weapon = _weapons[index];
             _hud.UpdateWeapon(_weapon);
@@ -239,7 +239,7 @@ public class Player : MonoBehaviour, IDamgeable
 
     private void SwitchTool()
     {
-        _isUsingTools = true;
+        //_isUsingTools = true;
 
         _weapon = null;
         _hud.UpdateWeapon(_weapon);
