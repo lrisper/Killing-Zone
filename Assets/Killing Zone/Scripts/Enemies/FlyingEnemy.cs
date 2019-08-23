@@ -1,14 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FlyingEnemy : Enemy
 {
+    [Header("Flying")]
     [SerializeField] float _distanceFromFloor;
     [SerializeField] float _bounceAmplitude;
     [SerializeField] float _bounceSpeed;
 
+    [Header("Chasing")]
+    [SerializeField] float _chasingRange;
+    [SerializeField] float _chasingSpeed;
+    [SerializeField] float _chasingSmoothness;
+
     float _bounceAngle;
+    Player _target;
 
     public void Start()
     {
@@ -16,6 +24,41 @@ public class FlyingEnemy : Enemy
     }
 
     public void Update()
+    {
+        // make enemy fly
+        Fly();
+
+        // chase player
+        Chase();
+
+
+    }
+
+    private void Chase()
+    {
+        if (_target = null)
+        {
+            // find a player
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, _chasingRange / 2, Vector3.down);
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.transform.GetComponent<Player>() != null)
+                {
+                    _target = hit.transform.GetComponent<Player>();
+                }
+
+            }
+
+            // chase the target
+            if (_target != null)
+            {
+                //
+            }
+
+        }
+    }
+
+    private void Fly()
     {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit))
@@ -43,9 +86,6 @@ public class FlyingEnemy : Enemy
 
 
         }
-
-
-
     }
 }
 
