@@ -496,6 +496,7 @@ public class Player : MonoBehaviour, IDamgeable
             {
                 _health = 0;
                 Destroy(gameObject);
+                _hud.ShowScreen("gameOver");
             }
 
             _hud.Health = _health;

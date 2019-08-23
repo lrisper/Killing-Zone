@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour
 {
+    [Header("Screens")]
+    [SerializeField] GameObject _regularScreen;
+    [SerializeField] GameObject _gameOverScreen;
+
     [Header("Interface Elements")]
     [SerializeField] Text _healthText;
     [SerializeField] Text _resourcesText;
@@ -62,6 +66,8 @@ public class HUDController : MonoBehaviour
 
     private void Start()
     {
+        ShowScreen("regular");
+
         targetFocusX = _toolContainer.transform.GetChild(0).transform.position.x;
         _toolFocus.transform.position = new Vector3(targetFocusX, _toolFocus.transform.position.y);
 
@@ -114,6 +120,12 @@ public class HUDController : MonoBehaviour
                 _weaponReloadBar.localScale = new Vector3(0, 1, 1);
             }
         }
+    }
+
+    public void ShowScreen(string screenName)
+    {
+        _regularScreen.SetActive(screenName == "regular");
+        _gameOverScreen.SetActive(screenName == "gameOver");
     }
 
 }
