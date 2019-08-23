@@ -53,12 +53,17 @@ public class Player : MonoBehaviour, IDamgeable
 
     List<Weapon> _weapons;
     Weapon _weapon;
+    float _health;
 
 
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+        _health = 100;
+        _hud.Health = _health;
+
         _resources = _initialResourceCount;
 
         _hud.Resources = _resources;
@@ -484,7 +489,20 @@ public class Player : MonoBehaviour, IDamgeable
 
     public int Damage(float amount)
     {
-        Debug.Log(amount);
+        if (_health > 0)
+        {
+            _health -= amount;
+            if (_health <= 0)
+            {
+                _health = 0;
+                Destroy(gameObject);
+            }
+
+            _hud.Health = _health;
+
+
+            //Debug.Log(amount);
+        }
         return 0;
     }
 }

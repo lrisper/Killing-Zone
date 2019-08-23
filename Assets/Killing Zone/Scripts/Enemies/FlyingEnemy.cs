@@ -30,7 +30,6 @@ public class FlyingEnemy : Enemy
 
     public void Update()
     {
-
         // chase player
         Chase();
     }
