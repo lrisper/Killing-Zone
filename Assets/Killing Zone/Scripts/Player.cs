@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 
 public class Player : MonoBehaviour, IDamgeable
 {
@@ -497,6 +499,8 @@ public class Player : MonoBehaviour, IDamgeable
                 _health = 0;
                 Destroy(gameObject);
                 _hud.ShowScreen("gameOver");
+
+                Invoke("ReloadGame", 3);
             }
 
             _hud.Health = _health;
@@ -505,6 +509,11 @@ public class Player : MonoBehaviour, IDamgeable
             //Debug.Log(amount);
         }
         return 0;
+    }
+
+    public void ReloadGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 
