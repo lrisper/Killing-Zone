@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour, IDamgeable
     [SerializeField] float _health;
     [SerializeField] float _hitSmoothness;
 
+    [SerializeField] protected float _damage;
+
     protected Rigidbody _enemyRigibody;
 
     float _targerScale = 1f;

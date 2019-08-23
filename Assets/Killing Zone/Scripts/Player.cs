@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamgeable
 {
     public enum PlayerTool
     {
@@ -480,6 +480,12 @@ public class Player : MonoBehaviour
 
         }
 
+    }
+
+    public int Damage(float amount)
+    {
+        Debug.Log(amount);
+        return 0;
     }
 }
 

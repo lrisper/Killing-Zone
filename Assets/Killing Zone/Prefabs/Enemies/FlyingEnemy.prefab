@@ -61,6 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _health: 40
   _hitSmoothness: 10
+  _damage: 25
   _distanceFromFloor: 2.5
   _hoverSmoothness: 2
   _bounceAmplitude: 0.3
@@ -68,6 +69,8 @@ MonoBehaviour:
   _chasingRange: 20
   _chasingSpeed: 1
   _chasingSmoothness: 0.5
+  _attackingRange: 8
+  _bounceBackSpeed: 5
 --- !u!54 &2101851998057957325
 Rigidbody:
   m_ObjectHideFlags: 0
