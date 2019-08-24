@@ -2396,10 +2396,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _focalPoint: {fileID: 8054667436698278727}
-  _RotationPoint: {fileID: 8054667437885914071}
+  _rotationPoint: {fileID: 0}
   _focalDistance: 0.4
-  _changefocalSideKey: 113
   _focalSmoothness: 7.5
+  _changeFocalSideKey: 0
   _interactionKey: 101
   _interactionDistance: 2.5
   _toolSwitchKey: 9
