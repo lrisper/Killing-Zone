@@ -129,9 +129,9 @@ public class FlyingEnemy : Enemy
     {
         Debug.Log(collision.gameObject.name);
 
-        if (collision.gameObject.GetComponent<IDamgeable>() != null)
+        if (collision.gameObject.GetComponent<IDamageable>() != null)
         {
-            collision.gameObject.GetComponent<IDamgeable>().Damage(_damage);
+            collision.gameObject.GetComponent<IDamageable>().Damage(_damage);
 
             Vector3 direction = (transform.position - collision.gameObject.transform.position).normalized;
             _enemyRigibody.velocity = direction * _bounceBackSpeed;

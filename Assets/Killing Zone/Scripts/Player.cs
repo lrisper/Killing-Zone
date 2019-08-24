@@ -1,114 +1,104 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
 
-
-public class Player : NetworkBehaviour, IDamgeable
+public class Player : NetworkBehaviour, IDamageable
 {
-    public delegate void DiedDelegate();
-    public event DiedDelegate OnPlayerDied;
     public enum PlayerTool
     {
-        pickaxe,
+        Pickaxe,
         ObstacleVertical,
         ObstacleRamp,
         ObstacleHorizontal,
         None
     }
 
-    [Header("Focal Point Variables")]
-    [SerializeField] GameObject _focalPoint;
-    [SerializeField] GameObject _RotationPoint;
-    [SerializeField] float _focalDistance;
-    [SerializeField] KeyCode _changefocalSideKey;
-    [SerializeField] float _focalSmoothness = 7.5f;
+    [Header("Focal Point variables")]
+    [SerializeField] private GameObject _focalPoint;
+    [SerializeField] private GameObject _rotationPoint;
+    [SerializeField] private float _focalDistance;
+    [SerializeField] private float _focalSmoothness;
+    [SerializeField] private KeyCode _changeFocalSideKey;
 
     [Header("Interaction")]
-    [SerializeField] KeyCode _interactionKey;
-    [SerializeField] float _interactionDistance;
+    [SerializeField] private KeyCode _interactionKey;
+    [SerializeField] private float _interactionDistance;
 
-    [Header("Game Play")]
-    [SerializeField] KeyCode _toolSwitchKey;
-    [SerializeField] PlayerTool _tool;
-    [SerializeField] int _initialResourceCount;
-    [SerializeField] float _resourceCollectionCooldown;
+    [Header("Gameplay")]
+    [SerializeField] private KeyCode _toolSwitchKey;
+    [SerializeField] private PlayerTool _tool;
+    [SerializeField] private int _initialResourceCount;
+    [SerializeField] private float _resourceCollectionCooldown;
 
     [Header("Obstacles")]
-    [SerializeField] GameObject[] _obstaclePrefabs;
+    [SerializeField] private GameObject[] _obstaclePrefabs;
 
     [Header("Weapons")]
-    [SerializeField] GameObject _shootOrigin;
-    [SerializeField] GameObject _rocketPrefab;
+    [SerializeField] private GameObject _shootOrigin;
+    [SerializeField] private GameObject _rocketPrefab;
 
     [Header("Debug")]
-    [SerializeField] GameObject _debugPositionPrefab;
+    [SerializeField] private GameObject _debugPositionPrefab;
 
-    bool _isFocalPointOnLeft = true;
-    int _resources;
-    float _resourceCollectionCooldownTimer = 0;
-    GameObject _currentObstacle;
-    bool _obstaclePlacementLock;
+    private bool _isFocalPointOnLeft = true;
+    private int _resources = 0;
+    private float _resourceCollectionCooldownTimer = 0;
+    private GameObject _currentObstacle;
+    private bool _obstaclePlacementLock;
 
-    List<Weapon> _weapons;
-    Weapon _weapon;
-    float _health;
+    private List<Weapon> _weapons;
 
-    HUDController _hud;
-    GameCamera _gameCamera;
-    GameObject _obstaclePlacementContainer;
-    GameObject _obstacleContainer;
+    private Weapon _weapon;
 
+    private HUDController _hud;
+    private GameCamera _gameCamera;
+    private GameObject _obstaclePlacementContainer;
+    private GameObject _obstacleContainer;
+    private int _obstacleToAddIndex;
+    private Health _health;
 
-    // Start is called before the first frame update
+    // Use this for initialization
     void Start()
     {
-
         Cursor.lockState = CursorLockMode.Locked;
 
-        // initialize values
-        _health = 100;
+        // Initialize values
         _resources = _initialResourceCount;
         _weapons = new List<Weapon>();
+        _health = GetComponent<Health>();
+        _health.OnHealthChanged += OnHealthChanged;
 
         if (isLocalPlayer)
         {
-            // game camera
+            // Game camera
             _gameCamera = FindObjectOfType<GameCamera>();
             _obstaclePlacementContainer = _gameCamera.ObstaclePlacementContainer;
             _gameCamera.Target = _focalPoint;
-            _gameCamera.RotationAnchorObject = _RotationPoint;
+            _gameCamera.RotationAnchorObject = _rotationPoint;
 
-            // hud Elements
+            // HUD elements
             _hud = FindObjectOfType<HUDController>();
             _hud.ShowScreen("regular");
-            _hud.Health = _health;
+            _hud.Health = _health.Value;
             _hud.Resources = _resources;
-            _hud.Tool = 0;
+            _hud.Tool = _tool;
             _hud.UpdateWeapon(null);
-
         }
 
-
-
-
-        // obstscle Containers
+        // Obstacle container
         _obstacleContainer = GameObject.Find("ObstacleContainer");
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
+        if (!isLocalPlayer) return;
 
-        // update timers
-        _resourceCollectionCooldown -= Time.deltaTime;
+        // Update timers.
+        _resourceCollectionCooldownTimer -= Time.deltaTime;
 
-        if (Input.GetKeyDown(_changefocalSideKey))
+        if (Input.GetKeyDown(_changeFocalSideKey))
         {
             _isFocalPointOnLeft = !_isFocalPointOnLeft;
         }
@@ -117,9 +107,9 @@ public class Player : NetworkBehaviour, IDamgeable
         float smoothX = Mathf.Lerp(_focalPoint.transform.localPosition.x, targetX, _focalSmoothness * Time.deltaTime);
         _focalPoint.transform.localPosition = new Vector3(smoothX, _focalPoint.transform.localPosition.y, _focalPoint.transform.localPosition.z);
 
-        // interaction logic
+        // Interaction logic.
 #if UNITY_EDITOR
-        //Draw interaction line
+        // Draw interaction line.
         Debug.DrawLine(_gameCamera.transform.position, _gameCamera.transform.position + _gameCamera.transform.forward * _interactionDistance, Color.green);
 #endif
         if (Input.GetKeyDown(_interactionKey))
@@ -134,104 +124,65 @@ public class Player : NetworkBehaviour, IDamgeable
             }
         }
 
-        // select weapons
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        // Select weapons.
+        if (Input.GetKeyDown("1"))
         {
             SwitchWeapon(0);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown("2"))
         {
             SwitchWeapon(1);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown("3"))
         {
             SwitchWeapon(2);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        else if (Input.GetKeyDown("4"))
         {
             SwitchWeapon(3);
-
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        else if (Input.GetKeyDown("5"))
         {
             SwitchWeapon(4);
         }
 
-        // tool switch logic
+        // Tool switch logic.
         if (Input.GetKeyDown(_toolSwitchKey))
         {
             SwitchTool();
-
         }
 
-        // Preserving the Obstacle Horizontal Rotation
+        // Preserving the obstacles' horizontal rotation.
         if (_currentObstacle != null)
         {
             _currentObstacle.transform.eulerAngles = new Vector3(
                 0,
-                transform.eulerAngles.y,
-                transform.eulerAngles.z
-                );
+                _currentObstacle.transform.eulerAngles.y,
+                _currentObstacle.transform.eulerAngles.z
+            );
         }
 
-        // Tool usage logic(continuous)
+        // Tool usage logic (continuous).
         if (Input.GetAxis("Fire1") > 0.1f)
         {
             UseToolContinuous();
         }
 
-        // Tool usage logic(Trigger)
-        if (Input.GetAxis("Fire1") > 0.1f && !_obstaclePlacementLock)
+        // Tool usage logic (trigger).
+        if (Input.GetAxis("Fire1") > 0.1f)
         {
-            _obstaclePlacementLock = true;
-            UseToolTrigger();
+            if (!_obstaclePlacementLock)
+            {
+                _obstaclePlacementLock = true;
+                UseToolTrigger();
+            }
         }
-
-        if (Input.GetAxis("Fire1") < 0.1f)
+        else
         {
             _obstaclePlacementLock = false;
         }
 
         UpdateWeapon();
-    }
-
-    private void UseToolTrigger()
-    {
-        if (_currentObstacle != null && _resources >= _currentObstacle.GetComponent<Obstacle>().Cost)
-        {
-            int cost = _currentObstacle.GetComponent<Obstacle>().Cost;
-            _resources -= cost;
-
-            _hud.Resources = _resources;
-            _hud.UpdateResourcesRequirement(cost, _resources);
-
-            GameObject newObstacle = Instantiate(_currentObstacle);
-            newObstacle.transform.SetParent(_obstacleContainer.transform);
-            newObstacle.transform.position = _currentObstacle.transform.position;
-            newObstacle.transform.rotation = _currentObstacle.transform.rotation;
-            newObstacle.GetComponent<Obstacle>().Place();
-        }
-    }
-
-    private void UseToolContinuous()
-    {
-        if (_tool == PlayerTool.pickaxe)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(_gameCamera.transform.position, _gameCamera.transform.forward, out hit, _interactionDistance))
-            {
-                if (_resourceCollectionCooldown <= 0 && hit.transform.GetComponent<ResourceObject>() != null)
-                {
-                    _resourceCollectionCooldownTimer = _resourceCollectionCooldown;
-
-                    ResourceObject resourceObject = hit.transform.GetComponent<ResourceObject>();
-                    Debug.Log("hit the object");
-                    int collectedResources = resourceObject.Damage(_weapon.Damage);
-                    _resources += collectedResources;
-                    _hud.Resources = _resources;
-                }
-            }
-        }
     }
 
     private void SwitchWeapon(int index)
@@ -244,20 +195,15 @@ public class Player : NetworkBehaviour, IDamgeable
             _tool = PlayerTool.None;
             _hud.Tool = _tool;
 
-            if (_currentObstacle != null)
-            {
-                Destroy(_currentObstacle);
-            }
+            if (_currentObstacle != null) Destroy(_currentObstacle);
 
-            // zoom out
+            // Zoom out.
             if (!(_weapon is Sniper))
             {
                 _gameCamera.ZoomOut();
-                _hud.sniperAimVisibilty = false;
+                _hud.SniperAimVisibility = false;
             }
         }
-
-
     }
 
     private void SwitchTool()
@@ -265,11 +211,11 @@ public class Player : NetworkBehaviour, IDamgeable
         _weapon = null;
         _hud.UpdateWeapon(_weapon);
 
-        // zoom the camera out
+        // Zoom the camera out.
         _gameCamera.ZoomOut();
-        _hud.sniperAimVisibilty = false;
+        _hud.SniperAimVisibility = false;
 
-        // cycle between tools
+        // Cycle between the avaiable tools.
         int currentToolIndex = (int)_tool;
         currentToolIndex++;
 
@@ -278,49 +224,99 @@ public class Player : NetworkBehaviour, IDamgeable
             currentToolIndex = 0;
         }
 
-        // get new tool
+        // Get the new tool.
         _tool = (PlayerTool)currentToolIndex;
         _hud.Tool = _tool;
 
-        int obstacleToAddIndex = -1;
-        // check for obstacle placement logic
+        // Check for obstacle placement logic.
+        _obstacleToAddIndex = -1;
         if (_tool == PlayerTool.ObstacleVertical)
         {
-            obstacleToAddIndex = 0;
+            _obstacleToAddIndex = 0;
         }
         else if (_tool == PlayerTool.ObstacleRamp)
         {
-            obstacleToAddIndex = 1;
+            _obstacleToAddIndex = 1;
         }
         else if (_tool == PlayerTool.ObstacleHorizontal)
         {
-            obstacleToAddIndex = 2;
+            _obstacleToAddIndex = 2;
         }
 
-        if (_currentObstacle != null)
+        if (_currentObstacle != null) Destroy(_currentObstacle);
+        if (_obstacleToAddIndex >= 0)
         {
-            Destroy(_currentObstacle);
-        }
-
-        if (obstacleToAddIndex >= 0)
-        {
-            _currentObstacle = Instantiate(_obstaclePrefabs[obstacleToAddIndex]);
+            _currentObstacle = Instantiate(_obstaclePrefabs[_obstacleToAddIndex]);
             _currentObstacle.transform.SetParent(_obstaclePlacementContainer.transform);
 
             _currentObstacle.transform.localPosition = Vector3.zero;
             _currentObstacle.transform.localRotation = Quaternion.identity;
 
+            _currentObstacle.GetComponent<Obstacle>().SetPositioningMode();
+
             _hud.UpdateResourcesRequirement(_currentObstacle.GetComponent<Obstacle>().Cost, _resources);
         }
+    }
 
+    private void UseToolContinuous()
+    {
+        if (_tool == PlayerTool.Pickaxe)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(_gameCamera.transform.position, _gameCamera.transform.forward, out hit, _interactionDistance))
+            {
+                if (_resourceCollectionCooldownTimer <= 0 && hit.transform.GetComponent<ResourceObject>() != null)
+                {
+                    _resourceCollectionCooldownTimer = _resourceCollectionCooldown;
+
+                    ResourceObject resourceObject = hit.transform.GetComponent<ResourceObject>();
+
+                    int collectedResources = 0;
+                    float resourceHealth = resourceObject.HealthValue;
+
+                    if (resourceHealth - 1 < 0.01f)
+                    {
+                        collectedResources = resourceObject.ResourceAmount;
+                    }
+
+                    CmdDamage(hit.transform.gameObject, 1);
+
+                    _resources += collectedResources;
+                    _hud.Resources = _resources;
+                }
+            }
+        }
+    }
+
+    private void UseToolTrigger()
+    {
+        if (_currentObstacle != null && _resources >= _currentObstacle.GetComponent<Obstacle>().Cost)
+        {
+            int cost = _currentObstacle.GetComponent<Obstacle>().Cost;
+            _resources -= cost;
+
+            _hud.Resources = _resources;
+            _hud.UpdateResourcesRequirement(cost, _resources);
+
+            CmdPlaceObstacle(_obstacleToAddIndex, _currentObstacle.transform.position, _currentObstacle.transform.rotation);
+        }
+    }
+
+    [Command]
+    void CmdPlaceObstacle(int index, Vector3 position, Quaternion rotation)
+    {
+        GameObject newObstacle = Instantiate(_obstaclePrefabs[index]);
+        newObstacle.transform.SetParent(_obstacleContainer.transform);
+        newObstacle.transform.position = position;
+        newObstacle.transform.rotation = rotation;
+        newObstacle.GetComponent<Obstacle>().Place();
+
+        NetworkServer.Spawn(newObstacle);
     }
 
     private void OnTriggerEnter(Collider otherCollider)
     {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
+        if (!isLocalPlayer) return;
 
         if (otherCollider.gameObject.GetComponent<ItemBox>() != null)
         {
@@ -328,64 +324,39 @@ public class Player : NetworkBehaviour, IDamgeable
 
             GiveItem(itemBox.Type, itemBox.Amount);
 
-            Destroy(otherCollider.gameObject);
+            CmdCollectBox(otherCollider.gameObject);
         }
+    }
+
+    [Command]
+    void CmdCollectBox(GameObject box)
+    {
+        Destroy(box);
     }
 
     private void GiveItem(ItemBox.ItemType type, int amount)
     {
-
-        // create a weapon reference
+        // Create a weapon reference.
         Weapon currentWeapon = null;
 
-        // check if we already have weapon
+        // Check if we already have an instance of this weapon.
         for (int i = 0; i < _weapons.Count; i++)
         {
-            if (type == ItemBox.ItemType.Pistol && _weapons[i] is Pistol)
-            {
-                currentWeapon = _weapons[i];
-            }
-            else if (type == ItemBox.ItemType.MachineGun && _weapons[i] is MachineGun)
-            {
-                currentWeapon = _weapons[i];
-            }
-            else if (type == ItemBox.ItemType.Shotgun && _weapons[i] is Shotgun)
-            {
-                currentWeapon = _weapons[i];
-            }
-            else if (type == ItemBox.ItemType.Sniper && _weapons[i] is Sniper)
-            {
-                currentWeapon = _weapons[i];
-            }
-            else if (type == ItemBox.ItemType.RocketLauncher && _weapons[i] is RocketLauncher)
-            {
-                currentWeapon = _weapons[i];
-            }
+            if (type == ItemBox.ItemType.Pistol && _weapons[i] is Pistol) currentWeapon = _weapons[i];
+            else if (type == ItemBox.ItemType.MachineGun && _weapons[i] is MachineGun) currentWeapon = _weapons[i];
+            else if (type == ItemBox.ItemType.Shotgun && _weapons[i] is Shotgun) currentWeapon = _weapons[i];
+            else if (type == ItemBox.ItemType.Sniper && _weapons[i] is Sniper) currentWeapon = _weapons[i];
+            else if (type == ItemBox.ItemType.RocketLauncher && _weapons[i] is RocketLauncher) currentWeapon = _weapons[i];
         }
 
-        // create weapon if we don't have one and add to list
+        // If we don't have a weapon of this type, create one, and add it to the weapons list.
         if (currentWeapon == null)
         {
-            if (type == ItemBox.ItemType.Pistol)
-            {
-                currentWeapon = new Pistol();
-            }
-            else if (type == ItemBox.ItemType.MachineGun)
-            {
-                currentWeapon = new MachineGun();
-            }
-            else if (type == ItemBox.ItemType.Shotgun)
-            {
-                currentWeapon = new Shotgun();
-            }
-            else if (type == ItemBox.ItemType.Sniper)
-            {
-                currentWeapon = new Sniper();
-            }
-            else if (type == ItemBox.ItemType.RocketLauncher)
-            {
-                currentWeapon = new RocketLauncher();
-            }
+            if (type == ItemBox.ItemType.Pistol) currentWeapon = new Pistol();
+            else if (type == ItemBox.ItemType.MachineGun) currentWeapon = new MachineGun();
+            else if (type == ItemBox.ItemType.Shotgun) currentWeapon = new Shotgun();
+            else if (type == ItemBox.ItemType.Sniper) currentWeapon = new Sniper();
+            else if (type == ItemBox.ItemType.RocketLauncher) currentWeapon = new RocketLauncher();
             _weapons.Add(currentWeapon);
         }
 
@@ -402,7 +373,6 @@ public class Player : NetworkBehaviour, IDamgeable
     {
         if (_weapon != null)
         {
-            // press R key to reload
             if (Input.GetKeyDown(KeyCode.R))
             {
                 _weapon.Reload();
@@ -412,23 +382,19 @@ public class Player : NetworkBehaviour, IDamgeable
             bool isPressingTrigger = Input.GetAxis("Fire1") > 0.1f;
 
             bool hasShot = _weapon.Update(timeElapsed, isPressingTrigger);
-            if (hasShot)
-            {
-                _hud.UpdateWeapon(_weapon);
-            }
-
+            _hud.UpdateWeapon(_weapon);
             if (hasShot)
             {
                 Shoot();
             }
 
-            // zoom logic
+            // Zoom logic.
             if (_weapon is Sniper)
             {
                 if (Input.GetMouseButtonDown(1))
                 {
-                    _gameCamera.TrigerZoom();
-                    _hud.sniperAimVisibilty = _gameCamera.IsZoomedIn;
+                    _gameCamera.TriggerZoom();
+                    _hud.SniperAimVisibility = _gameCamera.IsZoomedIn;
                 }
             }
         }
@@ -441,10 +407,10 @@ public class Player : NetworkBehaviour, IDamgeable
         {
             amountOfBullets = ((Shotgun)_weapon).AmountOfBullets;
         }
+
         for (int i = 0; i < amountOfBullets; i++)
         {
             float distanceFromCamera = Vector3.Distance(_gameCamera.transform.position, transform.position);
-
             RaycastHit targetHit;
             if (Physics.Raycast(_gameCamera.transform.position + (_gameCamera.transform.forward * distanceFromCamera), _gameCamera.transform.forward, out targetHit))
             {
@@ -452,10 +418,10 @@ public class Player : NetworkBehaviour, IDamgeable
 
                 Vector3 shootDirection = (hitPosition - _shootOrigin.transform.position).normalized;
                 shootDirection = new Vector3(
-                   shootDirection.x + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
-                   shootDirection.y + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
-                   shootDirection.z + Random.Range(-_weapon.AimVariation, _weapon.AimVariation));
-
+                    shootDirection.x + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
+                    shootDirection.y + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
+                    shootDirection.z + Random.Range(-_weapon.AimVariation, _weapon.AimVariation)
+                );
                 shootDirection.Normalize();
 
                 if (!(_weapon is RocketLauncher))
@@ -464,22 +430,20 @@ public class Player : NetworkBehaviour, IDamgeable
                     if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
                     {
                         GameObject debugPositionInstance = Instantiate(_debugPositionPrefab);
-                        _debugPositionPrefab.transform.position = shootHit.point;
+                        debugPositionInstance.transform.position = shootHit.point;
+                        Destroy(debugPositionInstance, 0.5f);
 
-                        Destroy(debugPositionInstance, .5f);
-
-                        if (shootHit.transform.GetComponent<IDamgeable>() != null)
+                        if (shootHit.transform.GetComponent<IDamageable>() != null)
                         {
-                            shootHit.transform.GetComponent<IDamgeable>().Damage(_weapon.Damage);
+                            CmdDamage(shootHit.transform.gameObject, _weapon.Damage);
                         }
-
-                        else if (shootHit.transform.GetComponentInParent<IDamgeable>() != null)
+                        else if (shootHit.transform.GetComponentInParent<IDamageable>() != null)
                         {
-                            shootHit.transform.GetComponent<IDamgeable>().Damage(_weapon.Damage);
+                            CmdDamage(shootHit.transform.parent.gameObject, _weapon.Damage);
                         }
 
 #if UNITY_EDITOR
-                        //Draw line to show shooting ray
+                        // Draw a line to show the shooting ray.
                         Debug.DrawLine(_shootOrigin.transform.position, _shootOrigin.transform.position + shootDirection * 100, Color.red);
 #endif
                     }
@@ -494,25 +458,35 @@ public class Player : NetworkBehaviour, IDamgeable
         }
     }
 
+    [Command]
+    private void CmdDamage(GameObject target, float damage)
+    {
+        if (target != null) target.GetComponent<IDamageable>().Damage(damage);
+    }
+
     public int Damage(float amount)
     {
-        if (_health > 0)
-        {
-            _health -= amount;
-            if (_health <= 0)
-            {
-                _health = 0;
-                Destroy(gameObject);
-                _hud.ShowScreen("gameOver");
-
-                if (OnPlayerDied != null)
-                {
-                    OnPlayerDied();
-                }
-            }
-            _hud.Health = _health;
-        }
+        GetComponent<Health>().Damage(amount);
         return 0;
+    }
+
+    private void OnHealthChanged(float newHealth)
+    {
+        if (!isLocalPlayer) return;
+
+        _hud.Health = newHealth;
+
+        if (newHealth < 0.01f)
+        {
+            _hud.ShowScreen("gameOver");
+            CmdDestroy();
+        }
+    }
+
+    [Command]
+    void CmdDestroy()
+    {
+        Destroy(gameObject);
     }
 }
 

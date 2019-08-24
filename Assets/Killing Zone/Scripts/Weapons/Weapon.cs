@@ -1,32 +1,28 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
 
 public abstract class Weapon
 {
-    // Ammunition fields
-    int _clipAmmunition;
-    int _totalAmmunition;
+    // Ammunition fields.
+    private int _clipAmmunition = 0;
+    private int _totalAmmunition = 0;
 
-    // weapon settings(customizable on each weapon)
-    protected int _clipSize;
-    protected int _maxAmmunition;
-    protected float _reloadDuration;
-    protected float _cooldownDuration;
-    protected bool _isAutomatic;
+    // Weapon settings (customizable on weapon classes).
+    protected int _clipSize = 0;
+    protected int _maxAmmunition = 0;
+    protected float _reloadDuration = 0.0f;
+    protected float _cooldownDuration = 0.0f;
+    protected bool _isAutomatic = false;
     protected string _weaponName = "";
-    protected float _aimVariation;
-    protected float _damage;
+    protected float _aimVariation = 0.0f;
+    protected float _damage = 0.0f;
 
+    // Private fields.
+    private float _reloadTimer = -1.0f;
+    private float _cooldownTimer = 0.0f;
+    private bool _pressedTrigger = false;
 
-    // private fields
-    float _reloadTimer = -1f;
-    float _coolDownTimer;
-    bool _pressedTrigger;
-
-    // properties
+    // Properties
     public int ClipAmmunition { get { return _clipAmmunition; } set { _clipAmmunition = value; } }
     public int TotalAmmunition { get { return _totalAmmunition; } set { _totalAmmunition = value; } }
 
@@ -35,48 +31,43 @@ public abstract class Weapon
     public float ReloadDuration { get { return _reloadDuration; } }
     public float CooldownDuration { get { return _cooldownDuration; } }
     public bool IsAutomatic { get { return _isAutomatic; } }
-    public string WeaponName { get { return _weaponName; } }
-    public float ReloadTimer { get { return _reloadTimer; } }
+    public string Name { get { return _weaponName; } }
     public float AimVariation { get { return _aimVariation; } }
     public float Damage { get { return _damage; } }
 
-    public void LoadClip()
-    {
-        int maxAmmunitionToLoad = _clipSize - _clipAmmunition;
-        int ammunitiontoLoad = System.Math.Min(maxAmmunitionToLoad, _totalAmmunition);
-
-        _clipAmmunition += ammunitiontoLoad;
-        _totalAmmunition -= ammunitiontoLoad;
-    }
+    public float ReloadTimer { get { return _reloadTimer; } }
 
     public void AddAmmunition(int amount)
     {
-        TotalAmmunition = System.Math.Min(_totalAmmunition + amount, _maxAmmunition);
+        _totalAmmunition = System.Math.Min(_totalAmmunition + amount, _maxAmmunition);
+    }
+
+    public void LoadClip()
+    {
+        int maximumAmmunitionToLoad = _clipSize - _clipAmmunition;
+        int ammunitionToLoad = System.Math.Min(maximumAmmunitionToLoad, _totalAmmunition);
+
+        _clipAmmunition += ammunitionToLoad;
+        _totalAmmunition -= ammunitionToLoad;
     }
 
     public bool Update(float deltaTime, bool isPressingTrigger)
     {
         bool hasShot = false;
 
-        // cooldown logic
-        _coolDownTimer -= deltaTime;
-        if (_coolDownTimer <= 0)
+        // Cooldown logic.
+        _cooldownTimer -= deltaTime;
+        if (_cooldownTimer <= 0)
         {
             bool canShoot = false;
-            if (_isAutomatic)
-            {
-                canShoot = isPressingTrigger;
-            }
-            else if (!_pressedTrigger && isPressingTrigger)
-            {
-                canShoot = true;
-            }
+            if (_isAutomatic) canShoot = isPressingTrigger;
+            else if (!_pressedTrigger && isPressingTrigger) canShoot = true;
 
-            if (canShoot && _reloadTimer <= 0)
+            if (canShoot && _reloadTimer <= 0.0f)
             {
-                _coolDownTimer = _cooldownDuration;
+                _cooldownTimer = _cooldownDuration;
 
-                // only shoot if there are any available bullets
+                // Only shoot if there are any available bullets.
                 if (_clipAmmunition > 0)
                 {
                     _clipAmmunition--;
@@ -85,7 +76,7 @@ public abstract class Weapon
 
                 if (_clipAmmunition == 0)
                 {
-                    // automatically reload weapon 
+                    // Automatically reload the weapon.
                     Reload();
                 }
             }
@@ -93,11 +84,11 @@ public abstract class Weapon
             _pressedTrigger = isPressingTrigger;
         }
 
-        // reload logic
-        if (_reloadTimer > 0)
+        // Reload logic.
+        if (_reloadTimer > 0.0f)
         {
             _reloadTimer -= deltaTime;
-            if (_reloadTimer <= 0)
+            if (_reloadTimer <= 0.0f)
             {
                 LoadClip();
             }
@@ -108,12 +99,12 @@ public abstract class Weapon
 
     public void Reload()
     {
-        // only reload weapon if weapon is not currently reloading,
-        // and the clip is not full and we have more bullets left
-        if (_reloadTimer <= 0 && _clipAmmunition < _clipSize && _totalAmmunition > 0)
+        // Only reload if the weapon is not currently reloading,
+        // the clip is not full and we have more bullets left.
+
+        if (_reloadTimer <= 0.0f && _clipAmmunition < _clipSize && _totalAmmunition > 0)
         {
             _reloadTimer = _reloadDuration;
         }
-
     }
 }

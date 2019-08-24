@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Obstacle : MonoBehaviour, IDamgeable
+public class Obstacle : MonoBehaviour, IDamageable
 {
-    [SerializeField] float _health;
-    [SerializeField] int _cost;
-    [SerializeField] float _hitSmoothness;
+    [SerializeField] private float _health;
+    [SerializeField] private int _cost;
+    [SerializeField] private float _hitSmoothness;
 
-    Renderer _obstacleRender;
-    int _targetScale = 1;
+    private Renderer _obstacleRender;
+    private int _targetScale = 1;
 
     public int Cost
     {
@@ -19,29 +19,31 @@ public class Obstacle : MonoBehaviour, IDamgeable
         }
     }
 
-    Collider _obstacleCollider;
+    public Collider _obstacleCollider;
 
     // Start is called before the first frame update
-    void Awake()
+    public void Awake()
     {
         _obstacleCollider = GetComponentInChildren<Collider>();
-
-        // start with obstacle collider disabled
-        _obstacleCollider.enabled = false;
-
-        //working with transparancy
         _obstacleRender = GetComponentInChildren<Renderer>();
-        _obstacleRender.material.color = new Color(1f, 1f, 1f, 0.5f);
-
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         transform.localScale = new Vector3(
             Mathf.Lerp(transform.localScale.x, _targetScale, _hitSmoothness * Time.deltaTime),
             Mathf.Lerp(transform.localScale.y, _targetScale, _hitSmoothness * Time.deltaTime),
             Mathf.Lerp(transform.localScale.z, _targetScale, _hitSmoothness * Time.deltaTime));
+    }
+
+    public void SetPositioningMode()
+    {
+        // start with obstacle collider disabled
+        _obstacleCollider.enabled = false;
+
+        // make the obstacle opaque 
+        _obstacleRender.material.color = new Color(1f, 1f, 1f, 0.5f);
     }
 
     public void Place()

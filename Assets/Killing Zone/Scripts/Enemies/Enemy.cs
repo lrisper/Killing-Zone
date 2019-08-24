@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IDamgeable
+public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] float _health;
     [SerializeField] float _hitSmoothness;
