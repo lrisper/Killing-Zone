@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Killing Zone/Scenes/Game.unity
+    guid: 42b7f071f51f041e3a457a7a7eaf3645
   m_configObjects: {}

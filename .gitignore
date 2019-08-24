@@ -118,3 +118,4 @@ sysinfo.txt
 *.apk
 
 *.unitypackage
+macBuild.app/Contents
