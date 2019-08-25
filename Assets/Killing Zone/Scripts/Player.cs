@@ -49,7 +49,7 @@ public class Player : NetworkBehaviour, IDamageable
 
     private List<Weapon> _weapons;
 
-    private Weapon _weapon;
+    private Weapon weapon;
 
     private HUDController _hud;
     private GameCamera _gameCamera;
@@ -189,8 +189,8 @@ public class Player : NetworkBehaviour, IDamageable
     {
         if (index < _weapons.Count)
         {
-            _weapon = _weapons[index];
-            _hud.UpdateWeapon(_weapon);
+            weapon = _weapons[index];
+            _hud.UpdateWeapon(weapon);
 
             _tool = PlayerTool.None;
             _hud.Tool = _tool;
@@ -198,7 +198,7 @@ public class Player : NetworkBehaviour, IDamageable
             if (_currentObstacle != null) Destroy(_currentObstacle);
 
             // Zoom out.
-            if (!(_weapon is Sniper))
+            if (!(weapon is Sniper))
             {
                 _gameCamera.ZoomOut();
                 _hud.SniperAimVisibility = false;
@@ -208,8 +208,8 @@ public class Player : NetworkBehaviour, IDamageable
 
     private void SwitchTool()
     {
-        _weapon = null;
-        _hud.UpdateWeapon(_weapon);
+        weapon = null;
+        _hud.UpdateWeapon(weapon);
 
         // Zoom the camera out.
         _gameCamera.ZoomOut();
@@ -363,33 +363,33 @@ public class Player : NetworkBehaviour, IDamageable
         currentWeapon.AddAmmunition(amount);
         currentWeapon.LoadClip();
 
-        if (currentWeapon == _weapon)
+        if (currentWeapon == weapon)
         {
-            _hud.UpdateWeapon(_weapon);
+            _hud.UpdateWeapon(weapon);
         }
     }
 
     private void UpdateWeapon()
     {
-        if (_weapon != null)
+        if (weapon != null)
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                _weapon.Reload();
+                weapon.Reload();
             }
 
             float timeElapsed = Time.deltaTime;
             bool isPressingTrigger = Input.GetAxis("Fire1") > 0.1f;
 
-            bool hasShot = _weapon.Update(timeElapsed, isPressingTrigger);
-            _hud.UpdateWeapon(_weapon);
+            bool hasShot = weapon.Update(timeElapsed, isPressingTrigger);
+            _hud.UpdateWeapon(weapon);
             if (hasShot)
             {
                 Shoot();
             }
 
             // Zoom logic.
-            if (_weapon is Sniper)
+            if (weapon is Sniper)
             {
                 if (Input.GetMouseButtonDown(1))
                 {
@@ -403,9 +403,9 @@ public class Player : NetworkBehaviour, IDamageable
     private void Shoot()
     {
         int amountOfBullets = 1;
-        if (_weapon is Shotgun)
+        if (weapon is Shotgun)
         {
-            amountOfBullets = ((Shotgun)_weapon).AmountOfBullets;
+            amountOfBullets = ((Shotgun)weapon).AmountOfBullets;
         }
 
         for (int i = 0; i < amountOfBullets; i++)
@@ -418,13 +418,13 @@ public class Player : NetworkBehaviour, IDamageable
 
                 Vector3 shootDirection = (hitPosition - _shootOrigin.transform.position).normalized;
                 shootDirection = new Vector3(
-                    shootDirection.x + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
-                    shootDirection.y + Random.Range(-_weapon.AimVariation, _weapon.AimVariation),
-                    shootDirection.z + Random.Range(-_weapon.AimVariation, _weapon.AimVariation)
+                    shootDirection.x + Random.Range(-weapon.AimVariation, weapon.AimVariation),
+                    shootDirection.y + Random.Range(-weapon.AimVariation, weapon.AimVariation),
+                    shootDirection.z + Random.Range(-weapon.AimVariation, weapon.AimVariation)
                 );
                 shootDirection.Normalize();
 
-                if (!(_weapon is RocketLauncher))
+                if (!(weapon is RocketLauncher))
                 {
                     RaycastHit shootHit;
                     if (Physics.Raycast(_shootOrigin.transform.position, shootDirection, out shootHit))
@@ -435,11 +435,11 @@ public class Player : NetworkBehaviour, IDamageable
 
                         if (shootHit.transform.GetComponent<IDamageable>() != null)
                         {
-                            CmdDamage(shootHit.transform.gameObject, _weapon.Damage);
+                            CmdDamage(shootHit.transform.gameObject, weapon.Damage);
                         }
                         else if (shootHit.transform.GetComponentInParent<IDamageable>() != null)
                         {
-                            CmdDamage(shootHit.transform.parent.gameObject, _weapon.Damage);
+                            CmdDamage(shootHit.transform.parent.gameObject, weapon.Damage);
                         }
 
 #if UNITY_EDITOR
@@ -450,12 +450,20 @@ public class Player : NetworkBehaviour, IDamageable
                 }
                 else
                 {
-                    GameObject rocket = Instantiate(_rocketPrefab);
-                    rocket.transform.position = _shootOrigin.transform.position + shootDirection;
-                    rocket.GetComponent<Rocket>().Shoot(shootDirection);
+                    CmdSpawnRocket(shootDirection);
                 }
             }
         }
+    }
+
+    [Command]
+    private void CmdSpawnRocket(Vector3 shootDirection)
+    {
+        GameObject rocket = Instantiate(_rocketPrefab);
+        rocket.transform.position = _shootOrigin.transform.position + shootDirection;
+        rocket.GetComponent<Rocket>().Shoot(shootDirection);
+
+        NetworkServer.Spawn(rocket);
     }
 
     [Command]
@@ -489,4 +497,3 @@ public class Player : NetworkBehaviour, IDamageable
         Destroy(gameObject);
     }
 }
-

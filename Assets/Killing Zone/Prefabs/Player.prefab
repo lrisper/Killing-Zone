@@ -2397,7 +2397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _focalPoint: {fileID: 8054667436698278727}
-  _rotationPoint: {fileID: 0}
+  _rotationPoint: {fileID: 8054667437885914071}
   _focalDistance: 0.4
   _focalSmoothness: 7.5
   _changeFocalSideKey: 0

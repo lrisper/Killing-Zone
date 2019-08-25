@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Rocket : MonoBehaviour
+public class Rocket : NetworkBehaviour
 {
-    [SerializeField] float _speed;
-    [SerializeField] float _lifeTime;
-    [SerializeField] GameObject _explosionPrefab;
-    [SerializeField] float _explosionRange;
-    [SerializeField] float _explosionDamage;
 
-    Rigidbody _rocketRigidbody;
-    float _timer;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _lifetime;
+    [SerializeField] private GameObject _explosionPrefab;
+    [SerializeField] private float _explosionRange;
+    [SerializeField] private float _explosionDamage;
 
-    // Start is called before the first frame update
+    private Rigidbody _rocketRigidbody;
+    private float _timer;
+
+    // Use this for initialization
     void Awake()
     {
         _rocketRigidbody = GetComponent<Rigidbody>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
         _timer += Time.deltaTime;
-        if (_timer >= _lifeTime)
+        if (_timer >= _lifetime)
         {
             Explode();
         }
@@ -44,9 +44,22 @@ public class Rocket : MonoBehaviour
 
     private void Explode()
     {
+        if (isServer)
+        {
+            CmdAddExplosion();
+
+            Destroy(gameObject);
+        }
+    }
+
+    [Command]
+    private void CmdAddExplosion()
+    {
         GameObject explosion = Instantiate(_explosionPrefab);
         explosion.transform.position = transform.position;
+
+        NetworkServer.Spawn(explosion);
+
         explosion.GetComponent<Explosion>().Explode(_explosionRange, _explosionDamage);
-        Destroy(gameObject);
     }
 }
