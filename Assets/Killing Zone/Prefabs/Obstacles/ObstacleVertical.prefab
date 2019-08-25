@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3456327334537288683}
   - component: {fileID: 3456327334537288684}
   - component: {fileID: 8801297183835149359}
+  - component: {fileID: 1340701531066610470}
   m_Layer: 0
   m_Name: ObstacleVertical
   m_TagString: Untagged
@@ -45,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e29f3a27e7ab646b58f9a6c47b426720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 10
+  _initialHealth: 4
   _cost: 4
   _hitSmoothness: 10
 --- !u!114 &8801297183835149359
@@ -81,6 +82,18 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &1340701531066610470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3456327334537288682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 046b74c6f35e24ab2a9000072114419b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3456327333562710021
 PrefabInstance:
   m_ObjectHideFlags: 0

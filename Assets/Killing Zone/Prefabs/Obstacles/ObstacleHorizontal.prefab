@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3289848610162924843}
   - component: {fileID: 3289848610162924842}
   - component: {fileID: 6558245775251701648}
+  - component: {fileID: 1903221115116668636}
   m_Layer: 0
   m_Name: ObstacleHorizontal
   m_TagString: Untagged
@@ -45,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e29f3a27e7ab646b58f9a6c47b426720, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 10
+  _initialHealth: 10
   _cost: 3
   _hitSmoothness: 10
 --- !u!114 &6558245775251701648
@@ -81,6 +82,18 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &1903221115116668636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3289848610162924840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 046b74c6f35e24ab2a9000072114419b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3289848610423314058
 PrefabInstance:
   m_ObjectHideFlags: 0
